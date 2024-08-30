@@ -1,1 +1,10 @@
-// place files you want to import through the `$lib` alias in this folder.
+import { ENV } from '$env/static/private';
+
+export function isProduction(): boolean {
+  const env = ENV.toLowerCase();
+  return env === 'production' || env === 'prod';
+}
+
+export function getENV(): string {
+  return ENV
+}
