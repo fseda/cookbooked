@@ -19,7 +19,7 @@ export const lucia = new Lucia(adapter, {
 		attributes: {
 			sameSite: 'lax',
 			secure: !dev,
-			domain: p_env.PUBLIC_DOMAIN,
+			domain: p_env.PUBLIC_ORIGIN,
 		}
 	}
 });
