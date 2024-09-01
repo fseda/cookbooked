@@ -1,3 +1,26 @@
+CREATE TABLE `oauth_accounts` (
+	`provider_id` text NOT NULL,
+	`provider_user_id` text NOT NULL,
+	`user_id ` text NOT NULL,
+	PRIMARY KEY(`provider_id`, `provider_user_id`),
+	FOREIGN KEY (`provider_id`) REFERENCES `oauth_providers`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`user_id `) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `oauth_providers` (
+	`id` text PRIMARY KEY NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `sessions` (
+	`id` text PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`ip_address` text,
+	`signin_at` integer DEFAULT current_timestamp NOT NULL,
+	`signout_at` integer DEFAULT null,
+	`expires_at` integer NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
 CREATE TABLE `bookmarks` (
 	`recipe_id` integer,
 	`user_id` integer,
@@ -31,16 +54,6 @@ CREATE TABLE `recipes` (
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `sessions` (
-	`id` text PRIMARY KEY NOT NULL,
-	`user_id` integer NOT NULL,
-	`ip_address` text,
-	`signin_at` integer DEFAULT current_timestamp NOT NULL,
-	`signout_at` integer DEFAULT null,
-	`expires_at` integer NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
-);
---> statement-breakpoint
 CREATE TABLE `tags` (
 	`recipe_id` integer,
 	`name` text,
@@ -51,14 +64,13 @@ CREATE TABLE `tags` (
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`id` text PRIMARY KEY NOT NULL,
 	`username` text(100),
 	`name` text(250),
 	`email` text(250) NOT NULL,
 	`avatar` blob,
 	`bio` text,
 	`avatar_url` text,
-	`google_id` text,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer NOT NULL
 );

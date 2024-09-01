@@ -1,0 +1,1 @@
+ALTER TABLE `oauth_providers` ADD `active` integer DEFAULT false NOT NULL;
