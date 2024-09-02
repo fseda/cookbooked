@@ -5,6 +5,7 @@ export const actions = {
   signout: async ({ cookies, locals }) => {
     Promise.all([
       lucia.invalidateSession(locals.session?.id || ''),
+      // auth.signOut(), // Think this only works in the browser
     ]).then(() => {
       cookies.delete(lucia.sessionCookieName, { path: '/' });
       redirect(303, '/auth');

@@ -1,8 +1,8 @@
-import { bookmarks, ratings, timestamps } from './index';
-import { blob, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { relations } from "drizzle-orm";
-import { oauthAccounts, sessions } from "./auth";
 import { createId } from '@paralleldrive/cuid2';
+import { relations, sql } from "drizzle-orm";
+import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { oauthAccounts, sessions } from "./auth";
+import { bookmarks, ratings } from './index';
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey().$default(createId),
@@ -33,3 +33,14 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   ratings: many(ratings),
   bookmarks: many(bookmarks),
 }));
+
+export function timestamps() {
+  return {
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .default(sql`current_timestamp`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }) 
+      .$onUpdate(() => sql`current_timestamp`)
+      .notNull(),
+  }
+}

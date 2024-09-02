@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { relations, sql } from "drizzle-orm";
 import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { timestamps } from ".";
+// import { timestamps } from "./index";
 import { users } from "./users";
 
 export const oauthAccounts = sqliteTable('oauth_accounts', {
@@ -41,4 +41,15 @@ export const accessTokens = sqliteTable('access_tokens', {
     .default(dayjs(new Date()).add(24, 'hours').toDate()),
   ...timestamps(),
 });
+
+export function timestamps() {
+  return {
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .default(sql`current_timestamp`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }) 
+      .$onUpdate(() => sql`current_timestamp`)
+      .notNull(),
+  }
+}
 

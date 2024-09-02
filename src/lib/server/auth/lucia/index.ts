@@ -7,7 +7,7 @@ import { db } from "../../db";
 import { sessions } from '../../db/schema/auth';
 import { users } from '../../db/schema/users';
 
-const adapter = new DrizzleSQLiteAdapter(db, sessions, users); // your adapter
+const adapter = new DrizzleSQLiteAdapter(db, sessions, users);
 
 export const lucia = new Lucia(adapter, {
 	getUserAttributes: attributes => ({
