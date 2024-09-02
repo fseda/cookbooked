@@ -6,8 +6,8 @@ export default defineConfig({
 	plugins: [
         sentrySvelteKit({
             sourceMapsUploadOptions: {
-                org: "fseda",
-                project: "cookbooked"
+                org: process.env.SENTRY_ORG,
+                project: process.env.SENTRY_PROJECT,
             }
         }),
         sveltekit(),
