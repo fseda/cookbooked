@@ -1,3 +1,13 @@
+CREATE TABLE `access_tokens` (
+	`token` text PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`active` integer DEFAULT true NOT NULL,
+	`expires_at` integer DEFAULT '"2024-09-03T21:40:47.402Z"' NOT NULL,
+	`created_at` integer DEFAULT current_timestamp NOT NULL,
+	`updated_at` integer DEFAULT current_timestamp NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
 CREATE TABLE `oauth_accounts` (
 	`provider_id` text NOT NULL,
 	`provider_user_id` text NOT NULL,
@@ -8,7 +18,8 @@ CREATE TABLE `oauth_accounts` (
 );
 --> statement-breakpoint
 CREATE TABLE `oauth_providers` (
-	`id` text PRIMARY KEY NOT NULL
+	`id` text PRIMARY KEY NOT NULL,
+	`active` integer DEFAULT false NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `sessions` (
@@ -23,9 +34,9 @@ CREATE TABLE `sessions` (
 --> statement-breakpoint
 CREATE TABLE `bookmarks` (
 	`recipe_id` integer,
-	`user_id` integer,
+	`user_id` text,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer NOT NULL,
+	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`user_id`, `recipe_id`),
 	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
@@ -36,7 +47,7 @@ CREATE TABLE `ratings` (
 	`recipe_id` integer NOT NULL,
 	`rating` real NOT NULL,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer NOT NULL,
+	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`user_id`, `recipe_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE no action
@@ -50,7 +61,7 @@ CREATE TABLE `recipes` (
 	`body` text DEFAULT null,
 	`private` integer DEFAULT false,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer NOT NULL,
+	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -58,9 +69,13 @@ CREATE TABLE `tags` (
 	`recipe_id` integer,
 	`name` text,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer NOT NULL,
+	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`recipe_id`, `name`),
 	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `user_status` (
+	`id` text PRIMARY KEY NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
@@ -70,9 +85,11 @@ CREATE TABLE `users` (
 	`email` text(250) NOT NULL,
 	`avatar` blob,
 	`bio` text,
+	`status` text NOT NULL,
 	`avatar_url` text,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer NOT NULL
+	`updated_at` integer DEFAULT current_timestamp NOT NULL,
+	FOREIGN KEY (`status`) REFERENCES `user_status`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `recipes_user_id_name_unique` ON `recipes` (`user_id`,`name`);--> statement-breakpoint
