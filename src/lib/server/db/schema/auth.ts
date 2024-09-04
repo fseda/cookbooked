@@ -7,15 +7,30 @@ import { users } from "./users";
 export const oauthAccounts = sqliteTable('oauth_accounts', {
   provider_id: text('provider_id').notNull().references(() => oauthProviders.id),
   provider_user_id: text('provider_user_id').notNull(),
-  user_id: text('user_id ').notNull().references(() => users.id),
+  user_id: text('user_id').notNull().references(() => users.id),
 }, oauth => ({
   pk: primaryKey({ columns: [oauth.provider_id, oauth.provider_user_id] }),
 }));
+
+export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
+  oauthProvider: one(oauthProviders, {
+    fields: [oauthAccounts.provider_id],
+    references: [oauthProviders.id],
+  }),
+  user: one(users, {
+    fields: [oauthAccounts.user_id],
+    references: [users.id],
+  }),
+}))
 
 export const oauthProviders = sqliteTable('oauth_providers', {
   id: text('id').primaryKey(),
   active: integer('active', { mode: 'boolean' }).notNull().default(false),
 });
+
+export const oauthProvidersRelations = relations(oauthProviders, ({ many }) => ({
+  oauthAccounts: many(oauthAccounts),
+}));
 
 export const sessions = sqliteTable('sessions', {
   id: text('id').primaryKey(),
