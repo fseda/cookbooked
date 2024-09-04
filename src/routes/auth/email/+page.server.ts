@@ -1,23 +1,29 @@
-import { invalidate } from '$app/navigation';
 import { env as p_env } from '$env/dynamic/public';
 import { auth } from '$lib/server/auth/firebase';
 import { actionCodeSettings } from '$lib/server/auth/firebase/emailActionCode.js';
-import { lucia } from '$lib/server/auth/lucia/index.js';
 import { emailSignIn } from '$lib/server/data/auth.js';
 import { error, redirect } from '@sveltejs/kit';
 import { getAdditionalUserInfo, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, type AdditionalUserInfo } from "firebase/auth";
+import { fail, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { z } from 'zod';
 
 const emailCookieName = 'emailForSignIn';
 
+const schema = z.object({
+  email: z.string().email(),
+});
+
 export async function load({ url, cookies }) {
+  const form = await superValidate(zod(schema));
+
   if (!isSignInWithEmailLink(auth, url.href)) {
     redirect(303, '/auth');
   }
 
   const email = cookies.get(emailCookieName);
   if (!email) {
-    console.log('no email');
-    return;
+    return { form };
   }
 
   let userInfo: AdditionalUserInfo;
@@ -30,10 +36,8 @@ export async function load({ url, cookies }) {
     
     const sessionCookie = await emailSignIn(email);
     if (!sessionCookie) {
-      return;
+      return { form };
     }
-
-    // console.log('attributes', sessionCookie.attributes);
 
     const { path, domain, expires, httpOnly, sameSite, secure } = sessionCookie.attributes;
     cookies.set(sessionCookie.name, sessionCookie.value, {
@@ -50,8 +54,6 @@ export async function load({ url, cookies }) {
     error(404, { message: e.code+" "+e.message });
   }
 
-  console.log('cookie', cookies.get(lucia.sessionCookieName));
-
   const redirectPath = userInfo.isNewUser ? 'profile' : '/';
 
   redirect(303, redirectPath);
@@ -59,13 +61,17 @@ export async function load({ url, cookies }) {
 
 export const actions = {
   "send": async ({ request, cookies }) => {
-    const data = await request.formData();
+    const form = await superValidate(request, zod(schema));
 
-    const email = data.get('email')!.toString();
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    const email = form.data.email;
 
     try {
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-      cookies.set(emailCookieName, email, { 
+      await sendSignInLinkToEmail(auth, email.toString(), actionCodeSettings);
+      cookies.set(emailCookieName, email.toString(), { 
         path: '',
         domain: p_env.PUBLIC_DOMAIN,
       });
@@ -77,18 +83,26 @@ export const actions = {
       console.log(errorCode, errorMessage);
     } 
 
-    return {
-      email: email,
-    };
+    return { form };
   },
 
   "set": async ({ request, cookies }) => {
-    const data = await request.formData();
 
-    const email = data.get('email')?.toString();
-    if (email) {
-      cookies.set(emailCookieName, email, { path: '/' });
-      await invalidate('/auth/email');
+    console.log('set')
+    const form = await superValidate(request, zod(schema));
+    if (!form.valid) {
+      return fail(400, { form });
     }
+
+    const email = form.data.email;
+
+    if (email) {
+      cookies.set(emailCookieName, email, { 
+        path: '',
+        domain: p_env.PUBLIC_DOMAIN,
+      });
+    }
+
+    return { form };
   }
 }
