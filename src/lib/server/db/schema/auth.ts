@@ -48,6 +48,7 @@ export function timestamps() {
       .default(sql`current_timestamp`)
       .notNull(),
     updatedAt: integer('updated_at', { mode: 'timestamp' }) 
+      .default(sql`current_timestamp`)
       .$onUpdate(() => sql`current_timestamp`)
       .notNull(),
   }
