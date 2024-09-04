@@ -5,8 +5,8 @@ import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 Sentry.init({
-    dsn: env.SENTRY_DNS,
-    tracesSampleRate: 1
+	dsn: env.SENTRY_DNS,
+	tracesSampleRate: 1
 })
 
 export const handle: Handle = sequence(Sentry.sentryHandle(), handleCookies);

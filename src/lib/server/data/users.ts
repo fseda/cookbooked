@@ -18,4 +18,3 @@ export async function createUser(newUser: NewUser): Promise<User>  {
 export async function getOrCreateUserByEmail(email: string): Promise<User> {
   return await getUserByEmail(email) || await createUser({ email, status: 'active' });
 }
-

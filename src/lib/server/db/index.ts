@@ -12,4 +12,4 @@ export const db = drizzle(client, { logger: dev, schema: {
   ...mainSchema,
   ...userSchema,
   ...authSchema,
-} });
+}});
