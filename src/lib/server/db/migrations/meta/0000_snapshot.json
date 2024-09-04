@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c1441c20-c4df-4d8f-b5de-6926296d8568",
+  "id": "07298de5-5ebe-4c14-8829-3d60aef34507",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "access_tokens": {
@@ -35,7 +35,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-09-03T21:40:47.402Z\"'"
+          "default": "'\"2024-09-05T19:24:01.322Z\"'"
         },
         "created_at": {
           "name": "created_at",
@@ -90,8 +90,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id ": {
-          "name": "user_id ",
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -113,12 +113,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "oauth_accounts_user_id _users_id_fk": {
-          "name": "oauth_accounts_user_id _users_id_fk",
+        "oauth_accounts_user_id_users_id_fk": {
+          "name": "oauth_accounts_user_id_users_id_fk",
           "tableFrom": "oauth_accounts",
           "tableTo": "users",
           "columnsFrom": [
-            "user_id "
+            "user_id"
           ],
           "columnsTo": [
             "id"

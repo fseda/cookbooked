@@ -2,7 +2,7 @@ CREATE TABLE `access_tokens` (
 	`token` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`active` integer DEFAULT true NOT NULL,
-	`expires_at` integer DEFAULT '"2024-09-03T21:40:47.402Z"' NOT NULL,
+	`expires_at` integer DEFAULT '"2024-09-05T19:24:01.322Z"' NOT NULL,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
@@ -11,10 +11,10 @@ CREATE TABLE `access_tokens` (
 CREATE TABLE `oauth_accounts` (
 	`provider_id` text NOT NULL,
 	`provider_user_id` text NOT NULL,
-	`user_id ` text NOT NULL,
+	`user_id` text NOT NULL,
 	PRIMARY KEY(`provider_id`, `provider_user_id`),
 	FOREIGN KEY (`provider_id`) REFERENCES `oauth_providers`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`user_id `) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `oauth_providers` (
