@@ -1,18 +1,15 @@
 import { invalidate } from '$app/navigation';
+import { env as p_env } from '$env/dynamic/public';
 import { auth } from '$lib/server/auth/firebase';
 import { actionCodeSettings } from '$lib/server/auth/firebase/emailActionCode.js';
-import { isSignedIn } from '$lib/server/auth';
+import { lucia } from '$lib/server/auth/lucia/index.js';
 import { emailSignIn } from '$lib/server/data/auth.js';
 import { error, redirect } from '@sveltejs/kit';
 import { getAdditionalUserInfo, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, type AdditionalUserInfo } from "firebase/auth";
 
 const emailCookieName = 'emailForSignIn';
 
-export async function load({ url, cookies, locals }) {
-  if (isSignedIn(locals)) {
-    redirect(303, '/');
-  }
-
+export async function load({ url, cookies }) {
   if (!isSignInWithEmailLink(auth, url.href)) {
     redirect(303, '/auth');
   }
@@ -36,6 +33,8 @@ export async function load({ url, cookies, locals }) {
       return;
     }
 
+    // console.log('attributes', sessionCookie.attributes);
+
     const { path, domain, expires, httpOnly, sameSite, secure } = sessionCookie.attributes;
     cookies.set(sessionCookie.name, sessionCookie.value, {
       path: path || '/',
@@ -51,6 +50,8 @@ export async function load({ url, cookies, locals }) {
     error(404, { message: e.code+" "+e.message });
   }
 
+  console.log('cookie', cookies.get(lucia.sessionCookieName));
+
   const redirectPath = userInfo.isNewUser ? 'profile' : '/';
 
   redirect(303, redirectPath);
@@ -64,7 +65,10 @@ export const actions = {
 
     try {
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-      cookies.set(emailCookieName, email, { path: '' });
+      cookies.set(emailCookieName, email, { 
+        path: '',
+        domain: p_env.PUBLIC_DOMAIN,
+      });
     } catch (ex: unknown) {
       const e = ex as { code: number, message: string }
 
