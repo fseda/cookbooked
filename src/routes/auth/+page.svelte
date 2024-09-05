@@ -1,15 +1,13 @@
 <script lang=ts>
 
 	import { applyAction, enhance } from "$app/forms";
-	import SuperDebug, { superForm } from "sveltekit-superforms";
+	import { superForm } from "sveltekit-superforms";
 	import type { PageData } from "./$types";
 
   export let data: PageData;
 
   const { form } = superForm(data.form);
 </script>
-
-<SuperDebug data={$form} collapsible />
 
 <div>
   <p class="">A;SDFAHFJKHAFHJOIWUHFGJAF</p>

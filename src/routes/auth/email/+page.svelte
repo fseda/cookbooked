@@ -1,14 +1,12 @@
 <script>
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 
   export let data;
 
   const { form } = superForm(data.form);
 </script>
-
-<SuperDebug data={$form} />
 
 <form action=?/set method='post' 
   use:enhance={async () => {
