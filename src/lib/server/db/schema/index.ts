@@ -19,11 +19,6 @@ export const recipes = sqliteTable('recipes', {
   }
 });
 
-export const recipesRelations = relations(recipes, ({ many }) => ({
-  bookmarks: many(bookmarks),
-  ratings: many(ratings),
-  tags: many(tags),
-}));
 
 export const ratings = sqliteTable('ratings', {
   userId: integer('user_id').references(() => users.id).notNull(),
@@ -32,17 +27,6 @@ export const ratings = sqliteTable('ratings', {
   ...timestamps(),
 }, ratings => ({
   pk: primaryKey({ columns: [ratings.userId, ratings.recipeId]}),
-}));
-
-export const ratingsRelations = relations(ratings, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [ratings.recipeId],
-    references: [recipes.id],
-  }),
-  user: one(users, {
-    fields: [ratings.userId],
-    references: [users.id],
-  }),
 }));
 
 export const bookmarks = sqliteTable('bookmarks', {
@@ -55,30 +39,12 @@ export const bookmarks = sqliteTable('bookmarks', {
   }
 });
 
-export const bookmarksRelations = relations(bookmarks, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [bookmarks.recipeId],
-    references: [recipes.id],
-  }),
-  user: one(users, {
-    fields: [bookmarks.userId],
-    references: [users.id],
-  }),
-}));
-
 export const tags = sqliteTable('tags', {
   recipeId: integer('recipe_id').references(() => recipes.id),
   name: text('name'),
   ...timestamps(),
 }, tags => ({
   pk: primaryKey({ columns: [tags.recipeId, tags.name]}),
-}));
-
-export const tagsRelations = relations(tags, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [tags.recipeId],
-    references: [recipes.id],
-  })
 }));
 
 export function timestamps() {
@@ -92,3 +58,39 @@ export function timestamps() {
       .notNull(),
   }
 }
+
+export const recipesRelations = relations(recipes, ({ many }) => ({
+  bookmarks: many(bookmarks),
+  ratings: many(ratings),
+  tags: many(tags),
+}));
+
+export const ratingsRelations = relations(ratings, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [ratings.recipeId],
+    references: [recipes.id],
+  }),
+  user: one(users, {
+    fields: [ratings.userId],
+    references: [users.id],
+  }),
+}));
+
+
+export const bookmarksRelations = relations(bookmarks, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [bookmarks.recipeId],
+    references: [recipes.id],
+  }),
+  user: one(users, {
+    fields: [bookmarks.userId],
+    references: [users.id],
+  }),
+}));
+
+export const tagsRelations = relations(tags, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [tags.recipeId],
+    references: [recipes.id],
+  })
+}));
