@@ -9,8 +9,8 @@ export const recipes = sqliteTable('recipes', {
   name: text('name').notNull(),
   description: text('description').default(sql`null`),
   body: text('body').default(sql`null`),
-
   private: integer('private', { mode: 'boolean' }).default(false),
+  level: integer('level').references(() => levels.id),
 
   ...timestamps(),
 }, recipes => {
@@ -19,6 +19,9 @@ export const recipes = sqliteTable('recipes', {
   }
 });
 
+export const levels = sqliteTable('levels', {
+  id: text('id').primaryKey(),
+});
 
 export const ratings = sqliteTable('ratings', {
   userId: integer('user_id').references(() => users.id).notNull(),
@@ -59,11 +62,20 @@ export function timestamps() {
   }
 }
 
-export const recipesRelations = relations(recipes, ({ many }) => ({
+
+export const recipesRelations = relations(recipes, ({ one, many }) => ({
   bookmarks: many(bookmarks),
   ratings: many(ratings),
   tags: many(tags),
+  level: one(levels, {
+    fields: [recipes.level],
+    references: [levels.id],
+  }),
 }));
+
+export const levelsRelations = relations(levels, ({ many }) => ({
+  recipes: many(recipes),
+}))
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
   recipe: one(recipes, {
