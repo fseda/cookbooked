@@ -2,7 +2,7 @@ CREATE TABLE `access_tokens` (
 	`token` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`active` integer DEFAULT true NOT NULL,
-	`expires_at` integer DEFAULT '"2024-09-05T19:24:01.322Z"' NOT NULL,
+	`expires_at` integer DEFAULT '"2024-09-06T19:42:59.455Z"' NOT NULL,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
@@ -42,6 +42,10 @@ CREATE TABLE `bookmarks` (
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE TABLE `levels` (
+	`id` text PRIMARY KEY NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `ratings` (
 	`user_id` integer NOT NULL,
 	`recipe_id` integer NOT NULL,
@@ -60,9 +64,11 @@ CREATE TABLE `recipes` (
 	`description` text DEFAULT null,
 	`body` text DEFAULT null,
 	`private` integer DEFAULT false,
+	`level` integer,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer DEFAULT current_timestamp NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`level`) REFERENCES `levels`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `tags` (

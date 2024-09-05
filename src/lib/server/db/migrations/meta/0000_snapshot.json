@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "07298de5-5ebe-4c14-8829-3d60aef34507",
+  "id": "e445fb5c-8300-4845-b190-ed79e1a33814",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "access_tokens": {
@@ -35,7 +35,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-09-05T19:24:01.322Z\"'"
+          "default": "'\"2024-09-06T19:42:59.455Z\"'"
         },
         "created_at": {
           "name": "created_at",
@@ -303,6 +303,22 @@
       },
       "uniqueConstraints": {}
     },
+    "levels": {
+      "name": "levels",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "ratings": {
       "name": "ratings",
       "columns": {
@@ -432,6 +448,13 @@
           "autoincrement": false,
           "default": false
         },
+        "level": {
+          "name": "level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "integer",
@@ -466,6 +489,19 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "recipes_level_levels_id_fk": {
+          "name": "recipes_level_levels_id_fk",
+          "tableFrom": "recipes",
+          "tableTo": "levels",
+          "columnsFrom": [
+            "level"
           ],
           "columnsTo": [
             "id"
