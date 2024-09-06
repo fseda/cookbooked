@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/sveltekit';
 import { handleErrorWithSentry } from "@sentry/sveltekit";
 
 Sentry.init({
-  dsn: env.PUBLIC_SENTRY_DNS,
+  // dsn: env.PUBLIC_SENTRY_DNS,
   tracesSampleRate: 1.0,
 
   // This sets the sample rate to be 10%. You may want this to be 100% while

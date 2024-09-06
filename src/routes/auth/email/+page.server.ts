@@ -87,8 +87,6 @@ export const actions = {
   },
 
   "set": async ({ request, cookies }) => {
-
-    console.log('set')
     const form = await superValidate(request, zod(schema));
     if (!form.valid) {
       return fail(400, { form });

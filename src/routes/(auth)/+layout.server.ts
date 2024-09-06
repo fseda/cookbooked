@@ -5,4 +5,8 @@ export async function load({ locals }) {
   if (!isSignedIn(locals)) {
     error(401);
   }
+
+  return {
+    user: locals.user,
+  }
 }

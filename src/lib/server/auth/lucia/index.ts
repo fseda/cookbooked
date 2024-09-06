@@ -11,8 +11,7 @@ const adapter = new DrizzleSQLiteAdapter(db, sessions, users);
 
 export const lucia = new Lucia(adapter, {
 	getUserAttributes: attributes => ({
-		username: attributes.username,
-		email: attributes.email,
+		...attributes
 	}),
 	sessionExpiresIn: new TimeSpan(Number(env.SESSION_EXPIRATION_DAYS), 'd'),
 	sessionCookie: {
@@ -35,5 +34,9 @@ declare module "lucia" {
 
 interface DatabaseUserAttributes {
 	username: string;
+	name: string;
 	email: string;
+	status: boolean;
+	avatar_url: string;
+	bio: string;
 }
