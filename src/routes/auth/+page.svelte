@@ -35,12 +35,12 @@
             loading = true;
             return async ({ update, result }) => {
               applyAction(result);
-              $formErrors = result.data.form.errors;
+              $formErrors = result.data?.form?.errors;
 
               await update({ reset: true, invalidateAll: false }).finally(() => {
                 if (result.type === 'success') {
                   sent = true;
-                  email = result.data!.form.data.email;
+                  email = result.data?.form?.data?.email;
                 }
 
                 loading = false;
@@ -55,7 +55,10 @@
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
-          <Form.Button type=submit disabled={loading}>Get link</Form.Button>
+          <Form.Button type=submit disabled={loading}>
+
+            Get link
+          </Form.Button>
         </form>
       </Card.Content>
     </Card.Root>
