@@ -3,7 +3,11 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Home } from 'lucide-svelte';
 	import Theme from './Theme.svelte';
+	import type { User } from 'lucia';
+	import { getContext } from 'svelte';
 	import UserMenu from './UserMenu.svelte';
+
+  let user = getContext('user') as User | null;
 
 </script>
 
@@ -16,7 +20,10 @@
 
   <div class="flex justify-end space-x-4">
     <Theme />
-    <UserMenu />
+    
+    {#if user}
+      <UserMenu />
+    {/if}
   </div>
 </header>
 

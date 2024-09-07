@@ -52,7 +52,7 @@
           <Form.Field {form} name=email>
             <Form.Control let:attrs>
               <Form.Label>Email</Form.Label>
-              <Input {...attrs} bind:value={$formData.email} disabled={loading} />
+              <Input {...attrs} bind:value={$formData.email} placeholder="Your email" disabled={loading} />
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
