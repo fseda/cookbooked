@@ -5,6 +5,7 @@
   import type { User } from 'lucia';
   import { getContext } from 'svelte';
   import { List, Plus } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 
   const user = getContext('user') as User;
 
@@ -15,9 +16,17 @@
       initials = user.name.split(' ').length >= 2 
         ? user.name.split(' ')[0][0] + user.name.split(' ')[1][0]
         : user.name.slice(0, 2);
-    } else initials = user.username.slice(0, 2);
+    } else if (user.username) {
+      initials = user.username.slice(0, 2);
+    } else {
+      initials = user.email.slice(0, 2);
+    }
 
     return initials.toUpperCase();
+  }
+
+  const logout = () => {
+    fetch('/auth/logout', { credentials: 'include' }).then(() => goto('/auth'));
   }
 </script>
 
@@ -60,7 +69,7 @@
     <DropdownMenu.Separator />
 
     <DropdownMenu.Item class="flex justify-center">
-      <Button href="/auth/logout" class="w-full h-[1.8em]" variant=destructive size="sm">Log Out</Button>
+      <Button onclick={logout} class="w-full h-[1.8em]" variant=destructive size="sm">Log Out</Button>
     </DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>
