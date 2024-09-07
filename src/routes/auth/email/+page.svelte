@@ -6,6 +6,7 @@
   import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import Main from '$lib/components/ui/Main.svelte';
+	import { LoaderCircle } from 'lucide-svelte';
 
   let {
     data
@@ -47,7 +48,12 @@
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
-        <Form.Button type=submit disabled={loading}>Confirm Email</Form.Button>
+        <Form.Button type=submit disabled={loading}>
+          {#if loading}
+            <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+          {/if}
+          Confirm Email
+        </Form.Button>
       </form>
     </Card.Content>
   </Card.Root>

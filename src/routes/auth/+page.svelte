@@ -8,6 +8,7 @@
   import * as Form from '$lib/components/ui/form/';
 	import { Input } from "$lib/components/ui/input";
 	import Theme from "$lib/components/ui/Theme.svelte";
+	import { LoaderCircle } from "lucide-svelte";
 
   export let data: PageData;
 
@@ -55,8 +56,10 @@
             </Form.Control>
             <Form.FieldErrors />
           </Form.Field>
-          <Form.Button type=submit disabled={loading}>
-
+          <Form.Button type=submit disabled={loading} class="mt-2">
+            {#if loading}
+              <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+            {/if}
             Get link
           </Form.Button>
         </form>
