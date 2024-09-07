@@ -1,9 +1,10 @@
 import { relations, sql } from "drizzle-orm";
 import { integer, primaryKey, real, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 import { users } from "./users";
+import { createId } from "@paralleldrive/cuid2";
 
 export const recipes = sqliteTable('recipes', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
+  id: text('id').primaryKey().$default(createId),
   userId: integer('user_id').references(() => users.id),
 
   name: text('name').notNull(),

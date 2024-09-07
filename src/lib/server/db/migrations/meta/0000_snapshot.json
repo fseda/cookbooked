@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e445fb5c-8300-4845-b190-ed79e1a33814",
+  "id": "1785d149-9e48-4da3-ac9e-65d3687ee3df",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "access_tokens": {
@@ -35,7 +35,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-09-06T19:42:59.455Z\"'"
+          "default": "'\"2024-09-08T01:51:01.184Z\"'"
         },
         "created_at": {
           "name": "created_at",
@@ -405,10 +405,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "user_id": {
           "name": "user_id",

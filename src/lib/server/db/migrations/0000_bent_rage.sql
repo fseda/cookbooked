@@ -2,7 +2,7 @@ CREATE TABLE `access_tokens` (
 	`token` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`active` integer DEFAULT true NOT NULL,
-	`expires_at` integer DEFAULT '"2024-09-06T19:42:59.455Z"' NOT NULL,
+	`expires_at` integer DEFAULT '"2024-09-08T01:51:01.184Z"' NOT NULL,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
@@ -58,7 +58,7 @@ CREATE TABLE `ratings` (
 );
 --> statement-breakpoint
 CREATE TABLE `recipes` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`id` text PRIMARY KEY NOT NULL,
 	`user_id` integer,
 	`name` text NOT NULL,
 	`description` text DEFAULT null,
