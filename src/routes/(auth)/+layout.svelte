@@ -19,7 +19,7 @@
   setContext('user', user);
 </script>
 
-<Header {user}></Header>
+<Header></Header>
 
 <Main>
   {@render children()}
