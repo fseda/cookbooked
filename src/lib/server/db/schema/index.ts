@@ -5,13 +5,13 @@ import { createId } from "@paralleldrive/cuid2";
 
 export const recipes = sqliteTable('recipes', {
   id: text('id').primaryKey().$default(createId),
-  userId: integer('user_id').references(() => users.id),
+  userId: text('user_id').references(() => users.id),
 
   name: text('name').notNull(),
   description: text('description').default(sql`null`),
   body: text('body').default(sql`null`),
-  private: integer('private', { mode: 'boolean' }).default(false),
-  level: integer('level').references(() => levels.id),
+  private: integer('private', { mode: 'boolean' }).default(false).notNull(),
+  level: text('level').references(() => levels.id),
 
   ...timestamps(),
 }, recipes => {
@@ -71,6 +71,10 @@ export const recipesRelations = relations(recipes, ({ one, many }) => ({
   level: one(levels, {
     fields: [recipes.level],
     references: [levels.id],
+  }),
+  user: one(users, {
+    fields: [recipes.userId],
+    references: [users.id],
   }),
 }));
 
