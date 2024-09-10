@@ -56,11 +56,11 @@
     <DropdownMenu.Separator />
 
     <DropdownMenu.Group>
-      <DropdownMenu.Item>
+      <DropdownMenu.Item href="/my/recipes">
         My Recipes
         <DropdownMenu.Shortcut><List class="h-[1rem] w-[1rem]" /></DropdownMenu.Shortcut>
       </DropdownMenu.Item>
-      <DropdownMenu.Item>
+      <DropdownMenu.Item href="/recipes">
         New Recipe
         <DropdownMenu.Shortcut><Plus class="h-[1rem] w-[1rem]" /></DropdownMenu.Shortcut>
       </DropdownMenu.Item>
