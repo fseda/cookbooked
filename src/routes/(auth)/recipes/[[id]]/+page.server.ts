@@ -1,42 +1,36 @@
 import { isSignedIn } from '$lib/server/auth/index.js';
-import { canEdit, createRecipe, deleteRecipe, getRecipeById, type NewRecipe } from '$lib/server/data/recipes.js';
+import { canEdit, createRecipe, deleteRecipe, getRecipeById, type NewRecipe, type Recipe } from '$lib/server/data/recipes.js';
 import { error, redirect } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { z } from 'zod';
+import { createSchema } from './schema.js';
 
 export async function load({ locals, params }) {
-  if (!isSignedIn(locals)) {
-    return redirect(303, '/auth');
-  }
+  // if (!isSignedIn(locals)) {
+  //   return redirect(303, '/auth');
+  // }
 
+  let recipe: Recipe | undefined = {} as Recipe;
   if (params.id) {
-    const recipe = await getRecipeById(params.id);
+    recipe = await getRecipeById(params.id);
     if (!recipe) {
       return error(404);
     }
 
-    if (recipe.private && recipe.userId != locals.user!.id) {
+    if (recipe.private && recipe.userId !== locals.user?.id) {
       return error(404);
     }
-  
+
     return {
-      recipe,
-    };
+      form: await superValidate(recipe, zod(createSchema)),
+      ownerId: recipe.userId,
+    }
   }
 
   return {
-    recipe: {} as NewRecipe,
+    form: await superValidate(zod(createSchema)),
   };
 }
-
-const createSchema = z.object({
-  name: z.string().max(150),
-  description: z.string().max(255).nullable(),
-  body: z.string().nullable(),
-  private: z.boolean(),
-  level: z.string(),
-});
 
 export const actions = {
   create: async ({ locals, params, request }) => {

@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db";
 import { and, eq } from "drizzle-orm";
-import { recipes } from "../db/schema";
 import type { User } from "lucia";
+import { recipes } from "../db/schema";
 
 export type Recipe = typeof recipes.$inferSelect;
 export type NewRecipe = typeof recipes.$inferInsert;
@@ -47,7 +47,7 @@ export async function hasDuplicateName(name: string, userId: string): Promise<bo
     await db
       .select()
       .from(recipes)
-      .where(and(eq(recipes.name, name), eq(recipes.userId, userId)))
+      .where(and(eq(recipes.title, name), eq(recipes.userId, userId)))
   ).length > 0;
 }
 

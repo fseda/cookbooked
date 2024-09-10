@@ -2,7 +2,7 @@ CREATE TABLE `access_tokens` (
 	`token` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`active` integer DEFAULT true NOT NULL,
-	`expires_at` integer DEFAULT '"2024-09-08T01:51:01.184Z"' NOT NULL,
+	`expires_at` integer DEFAULT '"2024-09-10T19:55:40.001Z"' NOT NULL,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
@@ -59,12 +59,12 @@ CREATE TABLE `ratings` (
 --> statement-breakpoint
 CREATE TABLE `recipes` (
 	`id` text PRIMARY KEY NOT NULL,
-	`user_id` integer,
-	`name` text NOT NULL,
+	`user_id` text,
+	`title` text NOT NULL,
 	`description` text DEFAULT null,
 	`body` text DEFAULT null,
-	`private` integer DEFAULT false,
-	`level` integer,
+	`private` integer DEFAULT false NOT NULL,
+	`level` text,
 	`created_at` integer DEFAULT current_timestamp NOT NULL,
 	`updated_at` integer DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
@@ -98,6 +98,6 @@ CREATE TABLE `users` (
 	FOREIGN KEY (`status`) REFERENCES `user_status`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `recipes_user_id_name_unique` ON `recipes` (`user_id`,`name`);--> statement-breakpoint
+CREATE UNIQUE INDEX `recipes_user_id_title_unique` ON `recipes` (`user_id`,`title`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_username_unique` ON `users` (`username`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_email_unique` ON `users` (`email`);

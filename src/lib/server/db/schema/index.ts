@@ -1,13 +1,13 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations, sql } from "drizzle-orm";
 import { integer, primaryKey, real, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 import { users } from "./users";
-import { createId } from "@paralleldrive/cuid2";
 
 export const recipes = sqliteTable('recipes', {
   id: text('id').primaryKey().$default(createId),
   userId: text('user_id').references(() => users.id),
 
-  name: text('name').notNull(),
+  title: text('title').notNull(),
   description: text('description').default(sql`null`),
   body: text('body').default(sql`null`),
   private: integer('private', { mode: 'boolean' }).default(false).notNull(),
@@ -16,7 +16,7 @@ export const recipes = sqliteTable('recipes', {
   ...timestamps(),
 }, recipes => {
   return { 
-    userIdNameUnq: unique().on(recipes.userId, recipes.name),
+    userIdNameUnq: unique().on(recipes.userId, recipes.title),
   }
 });
 

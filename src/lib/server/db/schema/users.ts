@@ -2,7 +2,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { relations, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { oauthAccounts, sessions } from "./auth";
-import { bookmarks, ratings } from './index';
+import { bookmarks, ratings, recipes } from './index';
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey().$default(createId),
@@ -32,6 +32,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   }),
   ratings: many(ratings),
   bookmarks: many(bookmarks),
+  recipes: many(recipes),
 }));
 
 export function timestamps() {
