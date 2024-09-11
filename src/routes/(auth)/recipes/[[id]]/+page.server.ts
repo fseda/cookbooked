@@ -6,10 +6,6 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { createSchema } from './schema.js';
 
 export async function load({ locals, params, url }) {
-  // if (!isSignedIn(locals)) {
-  //   return redirect(303, '/auth');
-  // }
-
   let recipe: Recipe | undefined = {} as Recipe;
   if (params.id) {
     recipe = await getRecipeById(params.id);
@@ -22,13 +18,17 @@ export async function load({ locals, params, url }) {
     }
 
     if (url.searchParams.get('edit') === 'true' && recipe.userId !== locals.user?.id) {
-      redirect(303, url.href+'?edit=false');
+      error(403);
     }
 
     return {
       form: await superValidate(recipe, zod(createSchema)),
       ownerId: recipe.userId,
     }
+  }
+
+  if (!isSignedIn(locals)) {
+    return redirect(303, `/auth`);
   }
 
   return {

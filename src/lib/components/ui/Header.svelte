@@ -23,6 +23,8 @@
     
     {#if user}
       <UserMenu />
+    {:else}
+      <Button href="/auth" variant=outline>Sign in</Button>
     {/if}
   </div>
 </header>

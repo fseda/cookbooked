@@ -4,6 +4,7 @@
   import RecipeForm from '$lib/components/ui/RecipeForm.svelte';
   import RecipeView from '$lib/components/ui/RecipeView.svelte';
   import { Button } from '$lib/components/ui/button';
+	import { onMount } from 'svelte';
   import { toast, } from 'svelte-sonner';
 
   let {
@@ -11,16 +12,21 @@
   } = $props();
 
   let edit = $state($page.url.searchParams.get('edit') === 'true');
-  const canEdit = (): boolean => data.ownerId === data.user?.id;
+  const canEdit = (): boolean => !data.ownerId || data.ownerId === data.user?.id;
   async function setEdit(is: boolean) {
     edit = is;
+    $page.url.searchParams.delete('edit');
     if (!edit) { 
-      $page.url.searchParams.set('edit', 'false');
       await goto('?');
     } else {
       await goto(`?edit=true`);
     };
   }
+  onMount(() => {
+    if (!$page.params.id) {
+      setEdit(true);
+    }
+  })
   
   async function handleFormSuccess(e: CustomEvent) {
     await setEdit(false);

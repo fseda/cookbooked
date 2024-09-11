@@ -70,7 +70,7 @@
       <Card.Header>
         <Card.Title>Success!</Card.Title>
         <Card.Description>
-          <span class="text-sm dark:text-gray-300 text-gray-500">An email was successfully sent to <p class="font-bold">{email}</p></span>
+          <span class="text-sm dark:text-gray-300 text-gray-500">A sign in link was successfully sent to <p class="font-bold">{email}</p></span>
         </Card.Description>
       </Card.Header>
       <Card.Content>
