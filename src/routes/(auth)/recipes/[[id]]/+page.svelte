@@ -1,27 +1,54 @@
 <script lang=ts>
-  import RecipeForm from '$lib/components/RecipeForm.svelte';
-	import { Button } from '$lib/components/ui/button';
-  import { marked } from 'marked';
-  import DOMPurify from 'dompurify';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+  import RecipeForm from '$lib/components/ui/RecipeForm.svelte';
+  import RecipeView from '$lib/components/ui/RecipeView.svelte';
+  import { Button } from '$lib/components/ui/button';
+  import { toast, } from 'svelte-sonner';
 
   let {
-    data,
+    data
   } = $props();
 
-  let edit = $state(false);
+  let edit = $state($page.url.searchParams.get('edit') === 'true');
   const canEdit = (): boolean => data.ownerId === data.user?.id;
-
-  const postprocess = (html: string) => DOMPurify.sanitize(html);
+  async function setEdit(is: boolean) {
+    edit = is;
+    if (!edit) { 
+      $page.url.searchParams.set('edit', 'false');
+      await goto('?');
+    } else {
+      await goto(`?edit=true`);
+    };
+  }
   
+  async function handleFormSuccess(e: CustomEvent) {
+    await setEdit(false);
+    toast.success('Saved!', {
+      position: "top-right",
+      dismissable: true
+    });
+  }
+  function handleFormError(e: CustomEvent) {
+    toast.error(e.detail, {
+      position: "top-right",
+      dismissable: true
+    });
+  }
 </script>
 
 <div class="w-[40em] h-full">
   {#if edit && canEdit()}
-    <RecipeForm {data} />
+    <RecipeForm {data} 
+      onsuccess={handleFormSuccess} 
+      onerror={handleFormError} 
+      oncancel={() => setEdit(false)}
+    />
   {:else}
-    <div>
-      {@html marked(data.form.data.body || '', { hooks: { preprocess: (markdown) => markdown, postprocess: (html) => html }})}
-    </div>
+    <RecipeView {data}  />
   {/if}
 
+  {#if !edit && canEdit()}
+    <Button variant=outline onclick={() => setEdit(true)}>Edit</Button>
+  {/if}
 </div>

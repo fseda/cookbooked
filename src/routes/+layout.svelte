@@ -5,8 +5,10 @@
   // import Moon from "lucide-svelte/icons/moon";
  
   import '../app.css';
+	import { Toaster } from '$lib/components/ui/sonner';
 </script>
 
 <ModeWatcher />
+<Toaster richColors closeButton />
 
 <slot></slot>

@@ -5,7 +5,7 @@ import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createSchema } from './schema.js';
 
-export async function load({ locals, params }) {
+export async function load({ locals, params, url }) {
   // if (!isSignedIn(locals)) {
   //   return redirect(303, '/auth');
   // }
@@ -19,6 +19,10 @@ export async function load({ locals, params }) {
 
     if (recipe.private && recipe.userId !== locals.user?.id) {
       return error(404);
+    }
+
+    if (url.searchParams.get('edit') === 'true' && recipe.userId !== locals.user?.id) {
+      redirect(303, url.href+'?edit=false');
     }
 
     return {
