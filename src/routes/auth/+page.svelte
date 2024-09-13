@@ -21,6 +21,10 @@
 
 </script>
 
+<header class="flex justify-end space-x-4 p-4">
+  <Theme />
+</header>
+
 <Main>
   {#if !sent}
     <Card.Root class="w-[400px]">

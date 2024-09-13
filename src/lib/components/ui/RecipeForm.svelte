@@ -3,21 +3,21 @@
   import { Input } from '$lib/components/ui/input';
   import { Switch } from '$lib/components/ui/switch';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { createEventDispatcher } from 'svelte';
   import { superForm } from 'sveltekit-superforms';
-  import type { PageData } from '../../../routes/(auth)/recipes/[[id]]/$types';
   
   type Props = {
-    data: PageData,
+    data: any,
     oncancel: Function,
     onsuccess: Function,
     onerror: Function,
+    actionUrl: string,
   }
   let {
     data,
     oncancel: cancel,
     onsuccess: success,
     onerror: error,
+    actionUrl,
   }: Props = $props();
 
   let form = superForm(data.form, {
@@ -38,7 +38,7 @@
 </script>
 
 <form 
-  action="?/create"
+  action={actionUrl}
   method="post"
   use:enhance
 >

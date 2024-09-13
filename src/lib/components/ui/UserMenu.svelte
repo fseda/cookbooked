@@ -60,7 +60,7 @@
         My Recipes
         <DropdownMenu.Shortcut><List class="h-[1rem] w-[1rem]" /></DropdownMenu.Shortcut>
       </DropdownMenu.Item>
-      <DropdownMenu.Item href="/recipes">
+      <DropdownMenu.Item href="/recipes/new">
         New Recipe
         <DropdownMenu.Shortcut><Plus class="h-[1rem] w-[1rem]" /></DropdownMenu.Shortcut>
       </DropdownMenu.Item>
