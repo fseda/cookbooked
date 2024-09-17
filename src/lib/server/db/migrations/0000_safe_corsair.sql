@@ -2,10 +2,10 @@ CREATE TABLE `access_tokens` (
 	`token` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`active` integer DEFAULT true NOT NULL,
-	`expires_at` integer DEFAULT '"2024-09-10T19:55:40.001Z"' NOT NULL,
-	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer DEFAULT current_timestamp NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+	`expires_at` integer DEFAULT '"2024-09-18T17:43:13.593Z"' NOT NULL,
+	`created_at` text DEFAULT current_timestamp NOT NULL,
+	`updated_at` text DEFAULT current_timestamp NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `oauth_accounts` (
@@ -29,17 +29,17 @@ CREATE TABLE `sessions` (
 	`signin_at` integer DEFAULT current_timestamp NOT NULL,
 	`signout_at` integer DEFAULT null,
 	`expires_at` integer NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `bookmarks` (
-	`recipe_id` integer,
+	`recipe_id` text,
 	`user_id` text,
-	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer DEFAULT current_timestamp NOT NULL,
+	`created_at` text DEFAULT current_timestamp NOT NULL,
+	`updated_at` text DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`user_id`, `recipe_id`),
-	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `levels` (
@@ -47,14 +47,14 @@ CREATE TABLE `levels` (
 );
 --> statement-breakpoint
 CREATE TABLE `ratings` (
-	`user_id` integer NOT NULL,
-	`recipe_id` integer NOT NULL,
+	`recipe_id` text,
+	`user_id` text,
 	`rating` real NOT NULL,
-	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer DEFAULT current_timestamp NOT NULL,
+	`created_at` text DEFAULT current_timestamp NOT NULL,
+	`updated_at` text DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`user_id`, `recipe_id`),
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `recipes` (
@@ -65,19 +65,19 @@ CREATE TABLE `recipes` (
 	`body` text DEFAULT null,
 	`private` integer DEFAULT false NOT NULL,
 	`level` text,
-	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer DEFAULT current_timestamp NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action,
+	`created_at` text DEFAULT current_timestamp NOT NULL,
+	`updated_at` text DEFAULT current_timestamp NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE set null,
 	FOREIGN KEY (`level`) REFERENCES `levels`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `tags` (
 	`recipe_id` integer,
 	`name` text,
-	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer DEFAULT current_timestamp NOT NULL,
+	`created_at` text DEFAULT current_timestamp NOT NULL,
+	`updated_at` text DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`recipe_id`, `name`),
-	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `user_status` (
@@ -93,8 +93,8 @@ CREATE TABLE `users` (
 	`bio` text,
 	`status` text NOT NULL,
 	`avatar_url` text,
-	`created_at` integer DEFAULT current_timestamp NOT NULL,
-	`updated_at` integer DEFAULT current_timestamp NOT NULL,
+	`created_at` text DEFAULT current_timestamp NOT NULL,
+	`updated_at` text DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`status`) REFERENCES `user_status`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
