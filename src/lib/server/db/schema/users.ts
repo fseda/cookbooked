@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
 import { relations, sql } from "drizzle-orm";
-import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { oauthAccounts, sessions } from "./auth";
 import { bookmarks, ratings, recipes } from './index';
 
@@ -37,10 +37,10 @@ export const usersRelations = relations(users, ({ one, many }) => ({
 
 export function timestamps() {
   return {
-    createdAt: integer('created_at', { mode: 'timestamp' })
+    createdAt: text('created_at')
       .default(sql`current_timestamp`)
       .notNull(),
-    updatedAt: integer('updated_at', { mode: 'timestamp' }) 
+    updatedAt: text('updated_at') 
       .default(sql`current_timestamp`)
       .$onUpdate(() => sql`current_timestamp`)
       .notNull(),

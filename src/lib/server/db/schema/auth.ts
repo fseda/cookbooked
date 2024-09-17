@@ -34,7 +34,7 @@ export const oauthProvidersRelations = relations(oauthProviders, ({ many }) => (
 
 export const sessions = sqliteTable('sessions', {
   id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => users.id),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   IpAddress: text('ip_address'),
   signinAt: integer('signin_at', { mode: 'timestamp' }).default(sql`current_timestamp`).notNull(),
   signoutAt: integer('signout_at', { mode: 'timestamp' }).default(sql`null`),
@@ -50,7 +50,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 
 export const accessTokens = sqliteTable('access_tokens', {
   token: text('token').primaryKey(),
-  userId: text('user_id').notNull().references(() => users.id),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   active: integer('active', { mode: 'boolean' }).default(true).notNull(),
   expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
     .default(dayjs(new Date()).add(24, 'hours').toDate()),
@@ -59,10 +59,10 @@ export const accessTokens = sqliteTable('access_tokens', {
 
 export function timestamps() {
   return {
-    createdAt: integer('created_at', { mode: 'timestamp' })
+    createdAt: text('created_at')
       .default(sql`current_timestamp`)
       .notNull(),
-    updatedAt: integer('updated_at', { mode: 'timestamp' }) 
+    updatedAt: text('updated_at') 
       .default(sql`current_timestamp`)
       .$onUpdate(() => sql`current_timestamp`)
       .notNull(),

@@ -5,7 +5,7 @@ import { users } from "./users";
 
 export const recipes = sqliteTable('recipes', {
   id: text('id').primaryKey().$default(createId),
-  userId: text('user_id').references(() => users.id),
+  userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
 
   title: text('title').notNull(),
   description: text('description').default(sql`null`),
@@ -25,8 +25,8 @@ export const levels = sqliteTable('levels', {
 });
 
 export const ratings = sqliteTable('ratings', {
-  userId: integer('user_id').references(() => users.id).notNull(),
-  recipeId: integer('recipe_id').references(() => recipes.id).notNull(),
+  recipeId: text('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   rating: real('rating').notNull(),
   ...timestamps(),
 }, ratings => ({
@@ -34,8 +34,8 @@ export const ratings = sqliteTable('ratings', {
 }));
 
 export const bookmarks = sqliteTable('bookmarks', {
-  recipeId: integer('recipe_id').references(() => recipes.id),
-  userId: text('user_id').references(() => users.id),
+  recipeId: text('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   ...timestamps(),
 }, bookmarks => {
   return {
@@ -44,7 +44,7 @@ export const bookmarks = sqliteTable('bookmarks', {
 });
 
 export const tags = sqliteTable('tags', {
-  recipeId: integer('recipe_id').references(() => recipes.id),
+  recipeId: integer('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }),
   name: text('name'),
   ...timestamps(),
 }, tags => ({
@@ -53,10 +53,10 @@ export const tags = sqliteTable('tags', {
 
 export function timestamps() {
   return {
-    createdAt: integer('created_at', { mode: 'timestamp' })
+    createdAt: text('created_at')
       .default(sql`current_timestamp`)
       .notNull(),
-    updatedAt: integer('updated_at', { mode: 'timestamp' }) 
+    updatedAt: text('updated_at') 
       .default(sql`current_timestamp`)
       .$onUpdate(() => sql`current_timestamp`)
       .notNull(),
