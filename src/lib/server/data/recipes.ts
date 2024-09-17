@@ -1,9 +1,14 @@
 import { db } from "$lib/server/db";
 import { and, eq } from "drizzle-orm";
 import type { User } from "lucia";
-import { recipes } from "../db/schema";
+import { ratings, recipes } from "../db/schema";
+import { bookmarks } from './../db/schema/index';
 
 export type Recipe = typeof recipes.$inferSelect;
+export type RecipeComplete = typeof recipes.$inferSelect & {
+  ratings: typeof ratings.$inferSelect[],
+  bookmarks: typeof bookmarks.$inferSelect[],
+}
 export type NewRecipe = Omit<typeof recipes.$inferInsert, 'id'>;
 export type EditRecipe = typeof recipes.$inferInsert;
 
@@ -28,9 +33,33 @@ export function getRecipeById(id: string): Promise<Recipe | undefined> {
   });
 }
 
-export function getRecipesByUserId(userId: string): Promise<Recipe[] | undefined> {
-  return db.query.recipes.findMany({
+export function getRecipeComplete(id: string): Promise<RecipeComplete | undefined> {
+  return db.query.recipes.findFirst({
+    where: and(eq(recipes.id, id)),
+    with: {
+      ratings: true,
+      bookmarks: true,
+    }
+  })
+}
+
+export function getRecipesByUserId(userId: string): Promise<RecipeComplete[] | undefined> {
+ return db.query.recipes.findMany({
     where: eq(recipes.userId, userId),
+    with: {
+      ratings: true,
+      bookmarks: true,
+    }
+  });
+}
+
+export function getPublicRecipesByUserId(userId: string): Promise<RecipeComplete[] | undefined> {
+  return db.query.recipes.findMany({
+    where: and(eq(recipes.userId, userId), eq(recipes.private, false)),
+    with: {
+      ratings: true,
+      bookmarks: true,
+    }
   });
 }
 
@@ -65,4 +94,34 @@ export async function hasDuplicateTitle(title: string, userId: string): Promise<
       .where(and(eq(recipes.title, title), eq(recipes.userId, userId)))
   ).length > 0;
 }
+
+export async function toggleBookmark(recipeId: string, userId: string): Promise<boolean> {
+  const bookmarked = await db.query.bookmarks.findFirst({
+    where: and(
+      eq(bookmarks.recipeId, recipeId), eq(bookmarks.userId, userId)
+    ),
+  });
+
+  if (bookmarked) {
+    await db.delete(bookmarks)
+      .where(and(
+          eq(bookmarks.userId, userId),
+          eq(bookmarks.recipeId, recipeId),
+        ),
+      );
+  } else {
+    await db.insert(bookmarks).values({ recipeId, userId });
+  }
+
+  return !bookmarked;
+}
+
+export async function isBookmarked(recipeId: string, userId: string): Promise<boolean> {
+  return !!(await db.query.bookmarks.findFirst({
+    where: and(
+      eq(bookmarks.recipeId, recipeId), eq(bookmarks.userId, userId)
+    ),
+  }));
+}
+
 
