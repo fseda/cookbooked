@@ -6,6 +6,8 @@
 	import type { User } from 'lucia';
 	import { getContext } from 'svelte';
 	import UserMenu from './UserMenu.svelte';
+	import H1 from '$lib/components/typography/H1.svelte';
+
 
   let user = getContext('user') as User | null;
 
@@ -18,6 +20,15 @@
     </Button>
   </div>
 
+  <Button href=/ variant=ghost>
+    <span class="title">
+      <H1>Cookbooked</H1>
+    </span>
+    <span class="little-title">
+      <H1>CB</H1>
+    </span>
+  </Button>
+  
   <div class="flex justify-end space-x-4">
     <Theme />
     
@@ -29,4 +40,12 @@
   </div>
 </header>
 
-<!-- <Separator orientation=vertical class="my-4" /> -->
+<style>
+  .little-title { display: none; }
+  .title { display: contents; }
+
+  @media (max-width: 500px) {
+    .little-title { display: contents; }
+    .title { display: none; }
+  }
+</style>

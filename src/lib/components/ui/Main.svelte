@@ -15,6 +15,6 @@
 
 </script>
 
-<main class="relative h-full w-full overflow-y-auto flex justify-center items-center p-4 {clazz}">
+<main class="relative w-full overflow-y-auto flex justify-center items-center p-4 {clazz}">
   {@render children()}
 </main>

@@ -7,7 +7,6 @@
 	import { applyAction, enhance } from "$app/forms";
   import * as Form from '$lib/components/ui/form/';
 	import { Input } from "$lib/components/ui/input";
-	import Theme from "$lib/components/ui/Theme.svelte";
 	import { LoaderCircle } from "lucide-svelte";
 
   export let data: PageData;
@@ -21,11 +20,7 @@
 
 </script>
 
-<header class="flex justify-end space-x-4 p-4">
-  <Theme />
-</header>
-
-<Main>
+<Main class="h-[90%]">
   {#if !sent}
     <Card.Root class="w-[400px]">
       <Card.Header>

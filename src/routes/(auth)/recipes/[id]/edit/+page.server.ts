@@ -1,9 +1,21 @@
 import { isSignedIn } from '$lib/server/auth/index.js';
-import { deleteRecipe, editRecipe, getRecipeById, isOwner, type EditRecipe } from '$lib/server/data/recipes.js';
+import { deleteRecipe, editRecipe, getRecipeById, isOwner, isPublicDomain, type EditRecipe } from '$lib/server/data/recipes.js';
 import { error } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createSchema } from '../../schema';
+
+export async function load({ locals, parent }) {
+  const { recipe } = await parent();
+
+  if (!isOwner(recipe, locals.user) || isPublicDomain(recipe)) {
+    return error(403);
+  }
+
+  return {
+    form: await superValidate(recipe, zod(createSchema)),
+  };
+}
 
 export const actions = {
   edit: async ({ locals, params, request }) => {
@@ -55,6 +67,11 @@ export const actions = {
       return error(403);
     }
 
-    await deleteRecipe(recipe.id);
+    try {
+      await deleteRecipe(recipe.id);
+    } catch (e: unknown) {
+      console.log(e);
+      return fail(500);
+    }
   },
 };

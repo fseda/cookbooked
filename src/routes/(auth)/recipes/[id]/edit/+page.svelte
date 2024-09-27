@@ -5,6 +5,7 @@
 	import type { PageData } from "./$types";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
+  import * as Form from '$lib/components/ui/form';
  
   let {
     data
@@ -28,6 +29,8 @@
   }
 
   const gotoView = () => goto($page.url.pathname.split('/edit')[0]);
+
+  let isNew = $derived(!$page.params.id);
 </script>
 
 <div class="w-[40em] h-full">
@@ -38,3 +41,5 @@
     actionUrl="?/edit"
   />
 </div>
+
+

@@ -3,19 +3,20 @@
   import { page } from '$app/stores';
   import RecipeView from '$lib/components/ui/RecipeView.svelte';
   import { Button } from '$lib/components/ui/button';
+	import { Pencil } from 'lucide-svelte';
 
   let {
     data
   } = $props();
 
-  const canEdit = (): boolean => !data.ownerId || data.ownerId === data.user?.id;
-  const gotoEdit = () => goto($page.url.pathname+'/edit')
+  let canEdit = $derived(!data.ownerId || data.ownerId === data.user?.id);
+
 </script>
 
-<div class="w-[40em] h-full">
+<div class="w-[40em] h-full space-y-2">
   <RecipeView {data} />
 
-  {#if canEdit()}
-    <Button variant=outline onclick={() => gotoEdit()}>Edit</Button>
+  {#if canEdit}
+    <Button variant=outline onclick={() => goto($page.url.pathname+'/edit')}><Pencil size="18px" class="mr-1" /> Edit</Button>
   {/if}
 </div>

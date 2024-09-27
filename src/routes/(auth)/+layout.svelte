@@ -9,9 +9,10 @@
   } = $props();
 
   setContext('user', data.user);
+
 </script>
 
-<Header></Header>
+<Header/>
 
 <Main>
   {@render children()}

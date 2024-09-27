@@ -3,11 +3,13 @@ import { and, eq } from "drizzle-orm";
 import type { User } from "lucia";
 import { ratings, recipes } from "../db/schema";
 import { bookmarks } from './../db/schema/index';
+import type { users } from "../db/schema/users";
 
 export type Recipe = typeof recipes.$inferSelect;
 export type RecipeComplete = typeof recipes.$inferSelect & {
   ratings: typeof ratings.$inferSelect[],
   bookmarks: typeof bookmarks.$inferSelect[],
+  user?: typeof users.$inferSelect | null,
 }
 export type NewRecipe = Omit<typeof recipes.$inferInsert, 'id'>;
 export type EditRecipe = typeof recipes.$inferInsert;
@@ -39,6 +41,9 @@ export function getRecipeComplete(id: string): Promise<RecipeComplete | undefine
     with: {
       ratings: true,
       bookmarks: true,
+      level: true,
+      tags: true,
+      user: true,
     }
   })
 }
