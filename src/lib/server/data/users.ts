@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { users } from "../db/schema/users";
+import { adjectives, nouns, uniqueUsernameGenerator } from "unique-username-generator";
 
 type User = typeof users.$inferSelect;
 type NewUser = typeof users.$inferInsert;
@@ -23,7 +24,11 @@ export async function createUser(newUser: NewUser): Promise<User>  {
 }
 
 export async function getOrCreateUserByEmail(email: string): Promise<User> {
-  return await getUserByEmail(email) || await createUser({ email, status: 'active' });
+  return await getUserByEmail(email) || 
+    await createUser({ 
+      email, 
+      username: uniqueUsernameGenerator({ style: 'lowerCase', dictionaries: [adjectives, nouns], separator: '-' }), status: 'active' 
+    });
 }
 
 export function getPublicUser(user: User): PublicUser {

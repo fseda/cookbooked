@@ -61,7 +61,7 @@
   </DropdownMenu.Trigger>
   
   <DropdownMenu.Content class="w-[12em]">
-    <DropdownMenu.Label>My Things</DropdownMenu.Label>
+    <DropdownMenu.Label>{user.username}</DropdownMenu.Label>
 
     <DropdownMenu.Separator />
 
