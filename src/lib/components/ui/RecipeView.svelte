@@ -1,9 +1,14 @@
 <script lang=ts>
 	import { enhance } from '$app/forms';
+	import * as Popover from '$lib/components/ui/popover';
+	import dayjs from 'dayjs';
 	import DOMPurify from "dompurify";
+	import { Bookmark, BookmarkCheck } from 'lucide-svelte';
 	import { marked } from "marked";
 	import type { PageData } from "../../../routes/(auth)/recipes/[id]/$types";
-	import RecipeHeader from '../RecipeHeader.svelte';
+	import RecipeHeader from './RecipeHeader.svelte';
+	import H2 from '../typography/H2.svelte';
+	import Rating from './Rating.svelte';
 
   let {
     data
@@ -25,26 +30,73 @@
     bookmarkBtn?.click();
   }
 
-  let rating = $derived(() => recipe.ratings.reduce((p, c) => p + c.rating, 0));
+  let displayRating = $derived(() => {
+    return data.yourRating ?? recipe.ratings.reduce((p, c) => p + c.rating, 0);
+  })
 
-  const ownerUsername = data.recipe.user?.username || 'NO USERNAME';
+  const authorUsername = data.recipe.user?.username || 'NO USERNAME';
 
 </script>
 
-<!-- <div class="grid grid-cols-12 md:space-x-3 max-md:space-y-3"> -->
-  <article class="space-y-2 w-100 col-span-8 col-span-12 md:col-span-8">
-    <RecipeHeader title={recipe.title} 
-      ratingsAmount={recipe.ratings.length} rating={rating()} userRating={data.yourRating}
-      bookmarksAmount={recipe.bookmarks.length} 
-      bookmarked={data.bookmarked} bookmarkAction={toggleBookmark} />
+<article class="space-y-2 w-100 col-span-8 col-span-12 md:col-span-8">
+  <RecipeHeader>
+    {#snippet title()}
+      <Popover.Root>
+        <Popover.Trigger>
+          <H2>
+            {recipe.title}
+          </H2>
+        </Popover.Trigger>
+        <Popover.Content class="space-y-1">
+          <span class="font-bold">Additional Info</span>
+          <section class="flex flex-col">
+            <span class="text-sm text-gray-600 dark:text-gray-400">Author: 
+              {#if recipe.userId}
+                <a class="font-semibold hover:underline" href="/{recipe.userId}/recipes">{authorUsername}</a>
+              {:else}
+                <span class="font-semibold">NO USER</span>
+              {/if}
+            </span>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Last edited on: 
+              <span class="font-semibold">{dayjs(recipe.updatedAt).format('DD/MM/YYYY')}</span>
+            </span>
+          </section>
+        </Popover.Content>
+      </Popover.Root>
+    {/snippet}
 
-    {#if recipe.description}
-      <p>{recipe.description}</p>
-    {/if}
+    {#snippet rating()}
+      <Popover.Root>
+        <Popover.Trigger>
+          <Rating adapt={true} amount={recipe.ratings.length} rating={displayRating()}></Rating>
+        </Popover.Trigger>
+        <Popover.Content>
+          <Rating adapt={false} amount={recipe.ratings.length} rating={displayRating()}></Rating>
+        </Popover.Content>
+      </Popover.Root>
+    {/snippet}
+
+    {#snippet bookmark()}
+      <button class="flex flex-row p-2" onclick={() => toggleBookmark()}>
+        {#if data.bookmarked}
+          <BookmarkCheck />
+        {:else}
+          <Bookmark />
+        {/if}
+        {recipe.bookmarks.length}
+      </button>
+    {/snippet}
+  </RecipeHeader>
+
+  {#if !body && recipe.description}
+    <p>{recipe.description}</p>
+  {/if}
+
+  <div class="prose dark:prose-invert lg:prose-xl">
     {@html body}
-  </article>
-  
-<!-- </div> -->
+  </div>
+</article>
+
 
 <div hidden>
   <form action="?/bookmark" method=post use:enhance>

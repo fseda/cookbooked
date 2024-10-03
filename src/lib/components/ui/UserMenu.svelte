@@ -4,7 +4,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import type { User } from 'lucia';
   import { getContext } from 'svelte';
-  import { List, Plus } from 'lucide-svelte';
+  import { List, Plus, Bookmark } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 
   const user = getContext('user') as User;
@@ -28,6 +28,24 @@
   const logout = () => {
     fetch('/auth/logout', { credentials: 'include' }).then(() => goto('/auth'));
   }
+
+  const shortcuts = [
+    {
+      title: 'My Recipes',
+      href: '/me/recipes',
+      icon: List,
+    },
+    {
+      title: 'New Recipe',
+      href: '/recipes/new',
+      icon: Plus,
+    },
+    {
+      title: 'Bookmarks',
+      href: '/recipes/bookmarks',
+      icon: Bookmark,
+    }
+  ]
 </script>
 
 <DropdownMenu.Root>
@@ -56,14 +74,14 @@
     <DropdownMenu.Separator />
 
     <DropdownMenu.Group>
-      <DropdownMenu.Item href="/my/recipes">
-        My Recipes
-        <DropdownMenu.Shortcut><List class="h-[1rem] w-[1rem]" /></DropdownMenu.Shortcut>
-      </DropdownMenu.Item>
-      <DropdownMenu.Item href="/recipes/new">
-        New Recipe
-        <DropdownMenu.Shortcut><Plus class="h-[1rem] w-[1rem]" /></DropdownMenu.Shortcut>
-      </DropdownMenu.Item>
+      {#each shortcuts as shortcut (shortcut.title)}
+        <DropdownMenu.Item href={shortcut.href}>
+          {shortcut.title}
+          <DropdownMenu.Shortcut>
+            <svelte:component this={shortcut.icon} class="h-[1rem] w-[1rem]" />
+          </DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+      {/each}
     </DropdownMenu.Group>
 
     <DropdownMenu.Separator />

@@ -3,8 +3,9 @@
 	import RecipeForm from "$lib/components/ui/RecipeForm.svelte";
 	import { toast } from "svelte-sonner";
 	import type { PageData } from "./$types";
-	import { goto } from "$app/navigation";
+	import { afterNavigate, goto } from "$app/navigation";
 	import { page } from "$app/stores";
+	import { base } from "$app/paths";
  
   let {
     data
@@ -12,29 +13,34 @@
     data: PageData,
   } = $props();
 
-  async function handleFormSuccess() {
+  const handleFormSuccess = async () => {
     toast.success('Saved!', {
       position: "top-right",
       dismissable: true
     });
-
+    
     goto(`/recipes/${$page.form.recipe.id}`);
   }
-  function handleFormError() {
-    toast.error($page.form.error, {
+  const handleFormError = () => {
+    toast.error($page.form.error || 'Error', {
       position: "top-right",
       dismissable: true
     });
   }
+  const handleCancel = () => goto(previousPage);
 
-  const gotoView = () => goto($page.url.pathname.split('/edit')[0]);
+  let previousPage: string = base;
+  afterNavigate(({ from }) => {
+    previousPage = from?.url.pathname || previousPage;
+  });
+
 </script>
 
 <div class="w-[40em] h-full">
   <RecipeForm {data} 
     onsuccess={handleFormSuccess} 
     onerror={handleFormError} 
-    oncancel={() => gotoView()}
+    oncancel={handleCancel}
     actionUrl="?/create"
   />
 </div>

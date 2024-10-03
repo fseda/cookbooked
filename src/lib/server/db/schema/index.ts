@@ -34,8 +34,8 @@ export const ratings = sqliteTable('ratings', {
 }));
 
 export const bookmarks = sqliteTable('bookmarks', {
-  recipeId: text('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }),
-  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  recipeId: text('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }).notNull(),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
   ...timestamps(),
 }, bookmarks => {
   return {

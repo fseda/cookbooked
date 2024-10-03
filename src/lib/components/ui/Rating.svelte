@@ -1,54 +1,46 @@
 <script lang=ts>
-import { Star, StarHalf } from 'lucide-svelte';
+  import { Star } from 'lucide-svelte';
+  import RatingStars from './RatingStars.svelte';
 	
   let {
     rating = 0,
     maxRating = 5,
     amount = 0,
+    adapt = false
   }: {
     rating: number,
     maxRating?: number,
     amount: number,
+    adapt?: boolean,
   } = $props();
-
-  let fulls: number = $state(0);
-  let half: number = $state(0);
-  $effect(() => {
-    if (rating > maxRating) {
-      rating = maxRating;
-    }
-
-    fulls = Math.trunc(rating);
-    half = Number((rating - fulls).toFixed(1));
-
-    console.log(amount)
-  });
-
-  
-  
 </script>
 
-<div class="flex flex-row items-center">
-  <div class="relative">
-    <div class="flex gap-0">
-      {#each { length: maxRating } as _, s}
-        <Star size=20 strokeWidth=1.5 />
-      {/each}
-    </div>
-    <div class="absolute flex gap-0 top-0">
-      {#each { length: fulls } as _, f}
-        <Star size=20 strokeWidth=1.5 fill=gold />
-      {/each}
-      {#if half && half > 0}
-        <StarHalf size=20 strokeWidth=1.5 fill=gold />
-      {/if}
-    </div>
-  </div>
+{#snippet FullRatings()}
+  <RatingStars {rating} {maxRating} />
   <p class='text-center text-sm font-semibold ml-1'>
     {#if amount > 0}
-      ({rating} out of {maxRating})
+      {amount} {amount === 1 ? 'rating' : 'ratings'}
     {:else}
       No ratings
     {/if}
   </p>
-</div>
+{/snippet}
+
+{#if adapt}
+  <div class="hidden sm:flex flex-row items-center">
+    {@render FullRatings()}
+  </div>
+
+  <div class="flex sm:hidden items-center">
+    <Star size=20 strokeWidth=1.5 fill={amount > 0 ? 'gold' : ''} />
+    <p class='text-center text-sm font-semibold ml-1'>
+      {#if amount > 0}
+        {rating.toFixed(1)}
+      {/if}
+    </p>
+  </div>
+{:else}
+  <div class="flex flex-row items-center">
+    {@render FullRatings()}
+  </div>
+{/if}

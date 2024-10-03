@@ -1,9 +1,8 @@
 import { db } from "$lib/server/db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import type { User } from "lucia";
-import { ratings, recipes } from "../db/schema";
-import { bookmarks } from './../db/schema/index';
-import type { users } from "../db/schema/users";
+import { bookmarks, ratings, recipes } from "../db/schema";
+import { users } from "../db/schema/users";
 
 export type Recipe = typeof recipes.$inferSelect;
 export type RecipeComplete = typeof recipes.$inferSelect & {
@@ -35,6 +34,16 @@ export function getRecipeById(id: string): Promise<Recipe | undefined> {
   });
 }
 
+export function getRecipes(ids: string[]): Promise<RecipeComplete[]> {
+  return db.query.recipes.findMany({
+    where: inArray(recipes.id, ids),
+    with: {
+      bookmarks: true,
+      ratings: true,
+    }
+  });
+}
+
 export function getRecipeComplete(id: string): Promise<RecipeComplete | undefined> {
   return db.query.recipes.findFirst({
     where: and(eq(recipes.id, id)),
@@ -48,7 +57,7 @@ export function getRecipeComplete(id: string): Promise<RecipeComplete | undefine
   })
 }
 
-export function getRecipesByUserId(userId: string): Promise<RecipeComplete[] | undefined> {
+export function getRecipesByUserId(userId: string): Promise<RecipeComplete[]> {
  return db.query.recipes.findMany({
     where: eq(recipes.userId, userId),
     with: {
@@ -58,7 +67,7 @@ export function getRecipesByUserId(userId: string): Promise<RecipeComplete[] | u
   });
 }
 
-export function getPublicRecipesByUserId(userId: string): Promise<RecipeComplete[] | undefined> {
+export function getPublicRecipesByUserId(userId: string): Promise<RecipeComplete[]> {
   return db.query.recipes.findMany({
     where: and(eq(recipes.userId, userId), eq(recipes.private, false)),
     with: {
@@ -66,6 +75,14 @@ export function getPublicRecipesByUserId(userId: string): Promise<RecipeComplete
       bookmarks: true,
     }
   });
+}
+
+export async function getBookmarksByUserId(userId: string): Promise<RecipeComplete[]> {
+  const bkmks = await db.query.bookmarks.findMany({
+    where: eq(bookmarks.userId, userId),
+  });
+
+  return getRecipes(bkmks.map(b => b.recipeId))
 }
 
 export async function createRecipe(recipe: NewRecipe): Promise<Recipe> {
