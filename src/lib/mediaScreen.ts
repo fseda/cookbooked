@@ -19,14 +19,18 @@ export const tailwindResolutions = {
 export type MediaScreen = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export const getScreen = (): MediaScreen => {
-  if (!browser) return 'lg';
-  let screen: MediaScreen = 'lg';
+  if (!browser) return '2xl';
+  let screen: MediaScreen = '2xl';
   
   Object.entries(tailwindResolutions).forEach(([k, v]) => {
+    console.log(window.screen.width, Number(v.slice(0, v.length-2)));
+    
     if (window.screen.width > Number(v.slice(0, v.length-2))) {
       screen = k as MediaScreen;
     }
   });
+
+  console.log('screen', screen);
 
   return screen;
 }

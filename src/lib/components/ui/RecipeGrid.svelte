@@ -15,8 +15,8 @@
     'sm': 1,
     'md': 2,
     'lg': 3,
-    'xl': 3,
-    '2xl': 3,
+    'xl': 4,
+    '2xl': 4,
   };
   const maxRows = gridBasedOnWidth[getScreen()];
   const getColumnsLength = (maxRows: number) => {
@@ -68,14 +68,12 @@
   </Dialog.Root>
 {/snippet}
 
-<div class="gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+<div class="gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
   {#each columns() as column, i (i)}
     <div class="grid gap-2 h-fit">
-      {#if column}
-        {#each column as recipe (recipe.id)}
-          {@render RecipeCard(recipe)}
-        {/each}
-      {/if}
+      {#each column as recipe (recipe.id)}
+        {@render RecipeCard(recipe)}
+      {/each}
     </div>
   {/each}
 </div>
