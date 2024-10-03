@@ -60,6 +60,11 @@
             <span class="text-sm text-gray-600 dark:text-gray-400">Last edited on: 
               <span class="font-semibold">{dayjs(recipe.updatedAt).format('DD/MM/YYYY')}</span>
             </span>
+            {#if recipe.description}
+              <span class="text-sm text-gray-600 dark:text-gray-400">Description
+                <span class="font-semibold">{recipe.description}</span>
+              </span>
+            {/if}
           </section>
         </Popover.Content>
       </Popover.Root>

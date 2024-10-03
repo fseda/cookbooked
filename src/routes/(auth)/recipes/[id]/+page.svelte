@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   import RecipeView from '$lib/components/ui/RecipeView.svelte';
   import { Button } from '$lib/components/ui/button';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { Pencil } from 'lucide-svelte';
 
   let {
@@ -13,8 +14,10 @@
 
 </script>
 
-<div class="w-[40em] h-full space-y-2">
+<div class="w-[40em] h-full space-y-4">
   <RecipeView {data} />
+
+  <Separator />
 
   {#if canEdit}
     <Button variant=outline onclick={() => goto($page.url.pathname+'/edit')}><Pencil size="18px" class="mr-1" /> Edit</Button>
