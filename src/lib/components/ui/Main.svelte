@@ -1,7 +1,5 @@
 <script lang=ts>
-	import { page } from "$app/stores";
-	import { setContext, type Snippet } from "svelte";
-	import { writable } from "svelte/store";
+	import { type Snippet } from "svelte";
 
   interface Props {
     class?: string;
