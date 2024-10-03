@@ -1,14 +1,15 @@
 <script lang=ts>
   import { Button } from '$lib/components/ui/button';
-  import * as Card from '$lib/components/ui/card';
-	import RecipeGrid from '$lib/components/ui/RecipeGrid.svelte';
-	import type { isOwner, Recipe } from '$lib/server/data/recipes';
+  import RecipeGrid from '$lib/components/ui/RecipeGrid.svelte';
+	import { getContext } from 'svelte';
 
   let {
     data
   } = $props();
   let recipes = $derived(data.recipes || []);
 
+  let pageTitle = getContext('page-title') as { value: string };
+  pageTitle.value = 'My Recipes';
 </script>
 
 <div class="p-4 w-full space-y-4">
