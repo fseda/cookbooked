@@ -23,7 +23,7 @@ export const getScreen = (): MediaScreen => {
   let screen: MediaScreen = '2xl';
   
   Object.entries(tailwindResolutions).forEach(([k, v]) => {
-    if (window.screen.width > Number(v.slice(0, v.length-2))) {
+    if (window.innerWidth > Number(v.slice(0, v.length-2))) {
       screen = k as MediaScreen;
     }
   });
