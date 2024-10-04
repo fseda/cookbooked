@@ -24,8 +24,8 @@ import Header from '$lib/components/ui/Header.svelte';
 <Header/>
 
 <Main class="flex-col">
-  {#if pageTitle}
-    <H3 class="text-left w-full px-4">{pageTitle.value}</H3>
+  {#if pageTitle.value}
+    <H3 class="p-2 text-left w-full max-w-[40rem]">{pageTitle.value}</H3>
   {/if}
 
   {@render children()}

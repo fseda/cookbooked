@@ -6,6 +6,8 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
   import * as Form from '$lib/components/ui/form';
+	import H3 from "$lib/components/typography/H3.svelte";
+	import { getContext, onMount } from "svelte";
  
   let {
     data
@@ -31,9 +33,14 @@
   const gotoView = () => goto($page.url.pathname.split('/edit')[0]);
 
   let isNew = $derived(!$page.params.id);
+  const pageTitle = getContext('page-title') as { value: string };
+  onMount(() => {
+    pageTitle.value = 'Edit recipe';
+  });
+
 </script>
 
-<div class="w-[40em] h-full">
+<div class="p-2 max-w-[40em] w-full h-full space-y-2">
   <RecipeForm {data} 
     onsuccess={handleFormSuccess} 
     onerror={handleFormError} 

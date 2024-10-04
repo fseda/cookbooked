@@ -3,7 +3,6 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { getScreen, type MediaScreen } from '$lib/mediaScreen';
 	import type { Recipe } from "$lib/server/data/recipes";
-	import { onMount } from 'svelte';
 
   let {
     recipes
@@ -14,9 +13,9 @@
   const gridBasedOnWidth: Record<MediaScreen, number> = {
     'sm': 1,
     'md': 2,
-    'lg': 3,
-    'xl': 4,
-    '2xl': 4,
+    'lg': 2,
+    'xl': 3,
+    '2xl': 3,
   };
   const maxRows = gridBasedOnWidth[getScreen()];
   const getColumnsLength = (maxRows: number) => {
@@ -68,7 +67,7 @@
   </Dialog.Root>
 {/snippet}
 
-<div class="gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+<div class="gap-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
   {#each columns() as column, i (i)}
     <div class="grid gap-2 h-fit">
       {#each column as recipe (recipe.id)}
@@ -77,5 +76,3 @@
     </div>
   {/each}
 </div>
-
-

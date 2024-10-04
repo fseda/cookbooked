@@ -10,11 +10,11 @@
     data
   } = $props();
 
-  let canEdit = $derived(!data.ownerId || data.ownerId === data.user?.id);
+  let canEdit = $derived(data.ownerId === data.user?.id);
 
 </script>
 
-<div class="w-[40em] h-full space-y-4">
+<div class="max-w-[40em] w-full h-full space-y-4">
   <RecipeView {data} />
 
   <Separator />

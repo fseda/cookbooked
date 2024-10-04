@@ -6,6 +6,8 @@
 	import { afterNavigate, goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import { base } from "$app/paths";
+	import { getContext, onMount } from "svelte";
+	import H3 from "$lib/components/typography/H3.svelte";
  
   let {
     data
@@ -29,14 +31,19 @@
   }
   const handleCancel = () => goto(previousPage);
 
-  let previousPage: string = base;
-  afterNavigate(({ from }) => {
-    previousPage = from?.url.pathname || previousPage;
+  let previousPage: string = '/';
+  afterNavigate(({ from, to }) => {
+    previousPage = from?.url.pathname || previousPage;   
+  });
+
+  const pageTitle = getContext('page-title') as { value: string };
+  onMount(() => {
+    pageTitle.value = 'Create a new recipe';
   });
 
 </script>
 
-<div class="w-[40em] h-full">
+<div class="p-2 max-w-[40em] w-full h-full space-y-2">
   <RecipeForm {data} 
     onsuccess={handleFormSuccess} 
     onerror={handleFormError} 

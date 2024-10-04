@@ -31,12 +31,12 @@
 
   const shortcuts = [
     {
-      title: 'My Recipes',
+      title: 'List recipes',
       href: '/me/recipes',
       icon: List,
     },
     {
-      title: 'New Recipe',
+      title: 'Create',
       href: '/recipes/new',
       icon: Plus,
     },
