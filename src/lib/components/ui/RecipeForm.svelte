@@ -68,7 +68,7 @@
   <Form.Field {form} name="description">
     <Form.Control let:attrs>
       <Form.Label>Description</Form.Label>
-      <Input {...attrs} bind:value={$formData.description} class="h-[4em] text-md" />
+      <Input {...attrs} bind:value={$formData.description} class="h-[3em] text-md" />
     </Form.Control>
     <Form.FieldErrors />
   </Form.Field>
@@ -91,7 +91,7 @@
     <Form.FieldErrors />
   </Form.Field>
 
-  <div class="flex justify-between mt-3">
+  <div class="flex justify-between mt-4">
     <div class="flex space-x-1">
       <Form.Button loading={$delayed} disabled={$delayed}>
         Save 
