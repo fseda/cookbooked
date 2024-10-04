@@ -19,6 +19,22 @@ export async function getUserById(id: string): Promise<User | undefined> {
   });
 }
 
+export async function getUserByIdOrUsername(idOrUsername: string): Promise<User | undefined> {
+  const userById = await db.query.users.findFirst({
+    where: eq(users.id, idOrUsername),
+  });
+  if (userById) {
+    return userById;
+  }
+
+  const userByUsername = await db.query.users.findFirst({
+    where: eq(users.username, idOrUsername),
+  });
+  if (userByUsername) {
+    return userByUsername;
+  }
+}
+
 export async function createUser(newUser: NewUser): Promise<User>  {
   return (await db.insert(users).values(newUser).returning())[0];
 }
