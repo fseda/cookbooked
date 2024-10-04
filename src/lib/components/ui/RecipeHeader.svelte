@@ -1,10 +1,4 @@
 <script lang=ts>
-	import { Bookmark, BookmarkCheck } from "lucide-svelte";
-	import { mode } from 'mode-watcher';
-	import H2 from "../typography/H2.svelte";
-	import Button from "./button/button.svelte";
-	import Rating from "./Rating.svelte";
-  import * as Popover from '$lib/components/ui/popover';
 	import type { Snippet } from "svelte";
 
   let {
