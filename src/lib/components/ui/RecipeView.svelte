@@ -3,7 +3,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import dayjs from 'dayjs';
 	import DOMPurify from "dompurify";
-	import { Bookmark, BookmarkCheck } from 'lucide-svelte';
+	import { Bookmark, BookmarkCheck, Copy, CopyCheck } from 'lucide-svelte';
 	import { marked } from "marked";
 	import type { PageData } from "../../../routes/(auth)/recipes/[id]/$types";
 	import RecipeHeader from './RecipeHeader.svelte';
@@ -33,9 +33,20 @@
 
   let displayRating = $derived(() => {
     return data.yourRating ?? recipe.ratings.reduce((p, c) => p + c.rating, 0);
-  })
+  });
 
   const authorUsername = data.recipe.user?.username || 'NO USERNAME';
+
+  let copied = $state(false);
+  const handleCopy = () => {
+    if (!copied) {
+      copied = true;
+      setTimeout(() => {
+        copied = false;
+      }, 5000);
+      toast.info('Link copied to clipboard!', { position: 'top-right', duration: 5000 });
+    }
+  }
 
 </script>
 
@@ -68,6 +79,15 @@
                 <span class="font-semibold">{recipe.description}</span>
               </span>
             {/if}
+          </section>
+          <section class="flex flex-col space-y-1">
+            <button onclick={handleCopy}>
+              {#if copied}
+                <CopyCheck />
+              {:else}
+                <Copy />
+              {/if}
+            </button>
           </section>
         </Popover.Content>
       </Popover.Root>

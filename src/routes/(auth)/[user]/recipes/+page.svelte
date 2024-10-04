@@ -14,7 +14,7 @@
   })
 </script>
 
-<div class="p-4 max-w-[40em] space-y-4">
+<div class="p-2 max-w-[40em] space-y-4">
   {#if recipes.length}
     <RecipeGrid {recipes} />
   {:else if !data.isOwner}
