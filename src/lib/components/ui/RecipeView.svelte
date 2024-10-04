@@ -7,9 +7,10 @@
 	import { marked } from "marked";
 	import type { PageData } from "../../../routes/(auth)/recipes/[id]/$types";
 	import RecipeHeader from './RecipeHeader.svelte';
-	import H2 from '../typography/H2.svelte';
+	import H3 from '../typography/H3.svelte';
 	import Rating from './Rating.svelte';
 	import { toast } from 'svelte-sonner';
+  import { Button } from '$lib/components/ui/button';
 
   let {
     data
@@ -55,9 +56,9 @@
     {#snippet title()}
       <Popover.Root>
         <Popover.Trigger>
-          <H2>
+          <H3>
             {recipe.title}
-          </H2>
+          </H3>
         </Popover.Trigger>
         <Popover.Content class="space-y-2">
           <span class="font-bold">Additional Info</span>
@@ -80,14 +81,14 @@
               </span>
             {/if}
           </section>
-          <section class="flex flex-col space-y-1">
-            <button onclick={handleCopy}>
+          <section class="flex flex-row space-y-1">
+            <Button size='icon' variant=ghost onclick={handleCopy}>
               {#if copied}
                 <CopyCheck />
               {:else}
                 <Copy />
               {/if}
-            </button>
+            </Button>
           </section>
         </Popover.Content>
       </Popover.Root>
