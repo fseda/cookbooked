@@ -21,6 +21,8 @@ export const load = async ({ locals, params }) => {
   recipes.forEach(r => {
     r.bookmarked = r.bookmarks.some(b => b.userId === locals.user?.id);
     r.bookmarkAmount = r.bookmarks.length;
+    r.rating = r.ratings.reduce((acc, cur) => acc + cur.rating, 0);
+    r.ratingAmount = r.ratings.length;
   });
 
   return {

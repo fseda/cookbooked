@@ -101,6 +101,8 @@ export async function getBookmarksByUser(userId: string): Promise<RecipeComplete
   rs.forEach(r => {
     r.bookmarked = true;
     r.bookmarkAmount = r.bookmarks.length;
+    r.rating = r.ratings.reduce((acc, cur) => acc + cur.rating, 0);
+    r.ratingAmount = r.ratings.length;
     return r;
   });
 
