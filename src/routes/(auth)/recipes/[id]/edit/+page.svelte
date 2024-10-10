@@ -37,7 +37,6 @@
   onMount(() => {
     pageTitle.value = 'Edit recipe';
   });
-
 </script>
 
 <div class="p-2 max-w-[40em] w-full h-full space-y-2">
