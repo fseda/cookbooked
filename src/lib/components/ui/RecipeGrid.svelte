@@ -61,7 +61,7 @@
       <Card.Footer class="p-2">
         <div class="flex flex-row">
           <RecipeBookmark actionUrl='/recipes/{recipe.id}?/bookmark' 
-            recipeTitle={recipe.title} bookmarked={!!recipe.bookmarked} amount={recipe.bookmarkAmount || 0} />
+            recipeTitle={recipe.title} bookmarked={!!recipe.bookmarked} amount={recipe.bookmarkAmount!} />
         </div> 
       </Card.Footer>
     </Card.Root>
