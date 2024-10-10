@@ -41,12 +41,13 @@
 
   let copied = $state(false);
   const handleCopy = () => {
+    const timeout = 5000;
     if (!copied) {
       copied = true;
       setTimeout(() => {
         copied = false;
-      }, 5000);
-      toast.info('Link copied to clipboard!', { duration: 5000 });
+      }, timeout);
+      toast.info('Link copied to clipboard!', { duration: timeout });
     }
   }
 
@@ -82,15 +83,15 @@
               </span>
             {/if}
           </section>
-          <section class="flex flex-row space-y-1">
-            <Button size='icon' variant=ghost onclick={handleCopy}>
+          <!-- <section class="flex flex-row space-y-1"> -->
+            <Button size='icon' variant=ghost on:click={handleCopy}>
               {#if copied}
                 <CopyCheck />
               {:else}
                 <Copy />
               {/if}
             </Button>
-          </section>
+          <!-- </section> -->
         </Popover.Content>
       </Popover.Root>
     {/snippet}
