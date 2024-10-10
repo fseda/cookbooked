@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "4660b629-f009-4988-be88-b01c0f68a054",
+  "id": "e271d11c-25cc-4a26-a2dd-a2d881344caf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "access_tokens": {
@@ -35,7 +35,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-09-18T17:43:13.593Z\"'"
+          "default": "'\"2024-10-10T18:16:50.438Z\"'"
         },
         "created_at": {
           "name": "created_at",
@@ -236,14 +236,14 @@
           "name": "recipe_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {
@@ -410,8 +410,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "author_id": {
+          "name": "author_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -473,22 +473,22 @@
         }
       },
       "indexes": {
-        "recipes_user_id_title_unique": {
-          "name": "recipes_user_id_title_unique",
+        "recipes_author_id_title_unique": {
+          "name": "recipes_author_id_title_unique",
           "columns": [
-            "user_id",
+            "author_id",
             "title"
           ],
           "isUnique": true
         }
       },
       "foreignKeys": {
-        "recipes_user_id_users_id_fk": {
-          "name": "recipes_user_id_users_id_fk",
+        "recipes_author_id_users_id_fk": {
+          "name": "recipes_author_id_users_id_fk",
           "tableFrom": "recipes",
           "tableTo": "users",
           "columnsFrom": [
-            "user_id"
+            "author_id"
           ],
           "columnsTo": [
             "id"

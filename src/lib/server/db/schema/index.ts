@@ -5,7 +5,7 @@ import { users } from "./users";
 
 export const recipes = sqliteTable('recipes', {
   id: text('id').primaryKey().$default(createId),
-  userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+  authorId: text('author_id').references(() => users.id, { onDelete: 'set null' }),
 
   title: text('title').notNull(),
   description: text('description').default(sql`null`),
@@ -16,7 +16,7 @@ export const recipes = sqliteTable('recipes', {
   ...timestamps(),
 }, recipes => {
   return { 
-    userIdNameUnq: unique().on(recipes.userId, recipes.title),
+    userIdNameUnq: unique().on(recipes.authorId, recipes.title),
   }
 });
 
@@ -73,7 +73,7 @@ export const recipesRelations = relations(recipes, ({ one, many }) => ({
     references: [levels.id],
   }),
   user: one(users, {
-    fields: [recipes.userId],
+    fields: [recipes.authorId],
     references: [users.id],
   }),
 }));

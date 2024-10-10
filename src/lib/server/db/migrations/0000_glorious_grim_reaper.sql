@@ -2,7 +2,7 @@ CREATE TABLE `access_tokens` (
 	`token` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`active` integer DEFAULT true NOT NULL,
-	`expires_at` integer DEFAULT '"2024-09-18T17:43:13.593Z"' NOT NULL,
+	`expires_at` integer DEFAULT '"2024-10-10T18:16:50.438Z"' NOT NULL,
 	`created_at` text DEFAULT current_timestamp NOT NULL,
 	`updated_at` text DEFAULT current_timestamp NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
@@ -33,8 +33,8 @@ CREATE TABLE `sessions` (
 );
 --> statement-breakpoint
 CREATE TABLE `bookmarks` (
-	`recipe_id` text,
-	`user_id` text,
+	`recipe_id` text NOT NULL,
+	`user_id` text NOT NULL,
 	`created_at` text DEFAULT current_timestamp NOT NULL,
 	`updated_at` text DEFAULT current_timestamp NOT NULL,
 	PRIMARY KEY(`user_id`, `recipe_id`),
@@ -59,7 +59,7 @@ CREATE TABLE `ratings` (
 --> statement-breakpoint
 CREATE TABLE `recipes` (
 	`id` text PRIMARY KEY NOT NULL,
-	`user_id` text,
+	`author_id` text,
 	`title` text NOT NULL,
 	`description` text DEFAULT null,
 	`body` text DEFAULT null,
@@ -67,7 +67,7 @@ CREATE TABLE `recipes` (
 	`level` text,
 	`created_at` text DEFAULT current_timestamp NOT NULL,
 	`updated_at` text DEFAULT current_timestamp NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (`author_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE set null,
 	FOREIGN KEY (`level`) REFERENCES `levels`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -98,6 +98,6 @@ CREATE TABLE `users` (
 	FOREIGN KEY (`status`) REFERENCES `user_status`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `recipes_user_id_title_unique` ON `recipes` (`user_id`,`title`);--> statement-breakpoint
+CREATE UNIQUE INDEX `recipes_author_id_title_unique` ON `recipes` (`author_id`,`title`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_username_unique` ON `users` (`username`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_email_unique` ON `users` (`email`);

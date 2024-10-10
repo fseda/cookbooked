@@ -1,5 +1,5 @@
 import { isSignedIn } from '$lib/server/auth/index.js';
-import { getBookmarksByUserId } from '$lib/server/data/recipes.js';
+import { getBookmarksByUser } from '$lib/server/data/recipes.js';
 import { error } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
@@ -8,7 +8,7 @@ export const load = async ({ locals }) => {
     return error(401);
   }
 
-  const recipes = await getBookmarksByUserId(locals.user!.id);
+  const recipes = await getBookmarksByUser(locals.user!.id);  
   
   return {
     recipes,

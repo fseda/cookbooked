@@ -1,24 +1,34 @@
 import { db } from "$lib/server/db";
 import { and, eq, inArray } from "drizzle-orm";
 import type { User } from "lucia";
-import { bookmarks, ratings, recipes } from "../db/schema";
+import { ratings, recipes } from "../db/schema";
 import { users } from "../db/schema/users";
+import { bookmarks } from './../db/schema/index';
 
 export type Recipe = typeof recipes.$inferSelect;
 export type RecipeComplete = typeof recipes.$inferSelect & {
   ratings: typeof ratings.$inferSelect[],
   bookmarks: typeof bookmarks.$inferSelect[],
   user?: typeof users.$inferSelect | null,
+  bookmarked?: boolean,
+  bookmarkAmount?: number,
+  rating?: number,
+  ratingAmount?: number,
+  userRating?: number,
+}
+/*export type RecipeCompleteForRequester = RecipeComplete */ & {
+  bookmarked?: boolean | undefined,
+  bookmarkAmount?: number,
 }
 export type NewRecipe = Omit<typeof recipes.$inferInsert, 'id'>;
 export type EditRecipe = typeof recipes.$inferInsert;
 
 export function isPublicDomain(recipe: Recipe): boolean {
-  return !recipe.userId;
+  return !recipe.authorId;
 }
 
-export function isOwner(recipe: Recipe, user?: User | null): boolean {
-  return recipe.userId === user?.id;
+export function isAuthor(recipe: Recipe, user?: User | null): boolean {
+  return recipe.authorId === user?.id;
 }
 
 export function getRecipeById(id: string): Promise<Recipe | undefined> {
@@ -40,7 +50,7 @@ export function getRecipes(ids: string[]): Promise<RecipeComplete[]> {
     with: {
       bookmarks: true,
       ratings: true,
-    }
+    },
   });
 }
 
@@ -57,32 +67,44 @@ export function getRecipeComplete(id: string): Promise<RecipeComplete | undefine
   })
 }
 
-export function getRecipesByUserId(userId: string): Promise<RecipeComplete[]> {
- return db.query.recipes.findMany({
-    where: eq(recipes.userId, userId),
+export async function getRecipesByAuthor(authorId: string, includePrivate: boolean = false): Promise<RecipeComplete[]> {
+  const rs = await db.query.recipes.findMany({
+    where: eq(recipes.authorId, authorId),
     with: {
       ratings: true,
       bookmarks: true,
     }
-  });
+  }) as RecipeComplete[];
+
+  const filtered = includePrivate ? rs : filterPrivate(rs);
+
+  return filtered;
 }
 
-export function getPublicRecipesByUserId(userId: string): Promise<RecipeComplete[]> {
+export function getPublicRecipesByAuthor(authorId: string): Promise<RecipeComplete[]> {
   return db.query.recipes.findMany({
-    where: and(eq(recipes.userId, userId), eq(recipes.private, false)),
+    where: and(eq(recipes.authorId, authorId), eq(recipes.private, false)),
     with: {
       ratings: true,
       bookmarks: true,
-    }
+    },
   });
 }
 
-export async function getBookmarksByUserId(userId: string): Promise<RecipeComplete[]> {
+export async function getBookmarksByUser(userId: string): Promise<RecipeComplete[]> {
   const bkmks = await db.query.bookmarks.findMany({
     where: eq(bookmarks.userId, userId),
   });
 
-  return getRecipes(bkmks.map(b => b.recipeId))
+  const rs = filterPrivate((await getRecipes(bkmks.map(b => b.recipeId))), userId);
+
+  rs.forEach(r => {
+    r.bookmarked = true;
+    r.bookmarkAmount = r.bookmarks.length;
+    return r;
+  });
+
+  return rs;
 }
 
 export async function createRecipe(recipe: NewRecipe): Promise<Recipe> {
@@ -93,13 +115,13 @@ export async function createRecipe(recipe: NewRecipe): Promise<Recipe> {
 }
 
 export async function editRecipe(recipe: EditRecipe): Promise<Recipe> {
-  const { id, userId, ...otherFields } = recipe;
+  const { id, authorId, ...otherFields } = recipe;
 
   return (await db.update(recipes).set({
     ...otherFields
   })
   .where(and(
-    eq(recipes.id, id!), eq(recipes.userId, userId!)
+    eq(recipes.id, id!), eq(recipes.authorId, authorId!)
   ))
   .returning())[0];
 }
@@ -113,7 +135,7 @@ export async function hasDuplicateTitle(title: string, userId: string): Promise<
     await db
       .select()
       .from(recipes)
-      .where(and(eq(recipes.title, title), eq(recipes.userId, userId)))
+      .where(and(eq(recipes.title, title), eq(recipes.authorId, userId)))
   ).length > 0;
 }
 
@@ -146,4 +168,6 @@ export async function isBookmarked(recipeId: string, userId: string): Promise<bo
   }));
 }
 
-
+function filterPrivate<T extends RecipeComplete | Recipe>(recipes: T[], userId?: string): T[] {
+  return recipes.filter(recipe => !recipe.private || recipe.authorId === userId);
+}

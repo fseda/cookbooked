@@ -1,19 +1,24 @@
 import { isSignedIn } from '$lib/server/auth/index.js';
-import { getRecipeById, isOwner, toggleBookmark } from '$lib/server/data/recipes.js';
-import { error } from '@sveltejs/kit';
+import { getRecipeById, isAuthor, toggleBookmark } from '$lib/server/data/recipes.js';
+import { error, fail } from '@sveltejs/kit';
 
 export const actions = {
-  bookmark: async ({ locals, params }) => {
+  bookmark: async ({ locals, params, request }) => {
     if (!isSignedIn(locals)) {
-      return error(401);
+      return fail(401, {
+        message: 'You need to be signed in to bookmark.',
+      });
     }
 
-    const recipe = await getRecipeById(params.id);
+    const formData = await request.formData();
+    const id = (formData.get('id')?.valueOf() as string | undefined) || params.id;
+
+    const recipe = await getRecipeById(id);
     if (!recipe) {
       return error(404);
     }
 
-    if (recipe.private && !isOwner(recipe, locals.user)) {
+    if (recipe.private && !isAuthor(recipe, locals.user)) {
       return error(403);
     }
 

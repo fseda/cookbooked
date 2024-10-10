@@ -1,14 +1,21 @@
 <script lang=ts>
 	import * as Card from '$lib/components/ui/card';
+	import * as ContextMenu from "$lib/components/ui/context-menu";
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { getScreen, type MediaScreen } from '$lib/mediaScreen';
-	import type { Recipe } from "$lib/server/data/recipes";
+	import type { RecipeComplete as Recipe } from "$lib/server/data/recipes";
+	import type { User } from 'lucia';
+	import { Trash } from 'lucide-svelte';
+	import { getContext } from 'svelte';
+	import RecipeBookmark from './RecipeBookmark.svelte';
 
   let {
     recipes
   }: {
     recipes: Recipe[],
   } = $props();
+
+  const user = getContext('user') as User;
 
   const gridBasedOnWidth: Record<MediaScreen, number> = {
     'sm': 1,
@@ -37,11 +44,11 @@
 
 {#snippet RecipeCard(recipe: Recipe)}
   <div class="relative">
-    {@render RecipeDetails(recipe)}
+    <!-- {@render RecipeDetails(recipe)} -->
 
-    <a href="/recipes/{recipe.id}" class="h-fit">
-      <Card.Root class="w-full">
-        <Card.Header>
+    <Card.Root class="w-full">
+      <a href="/recipes/{recipe.id}" class="h-fit">
+        <Card.Header class="p-4">
           <Card.Title>
             {recipe.title}
           </Card.Title>
@@ -50,9 +57,26 @@
         <!-- <Card.Content>
           
         </Card.Content> -->
-      </Card.Root>
-    </a>
+      </a>
+      <Card.Footer class="p-2">
+        <div class="flex flex-row">
+          <RecipeBookmark actionUrl='/recipes/{recipe.id}?/bookmark' 
+            recipeTitle={recipe.title} bookmarked={!!recipe.bookmarked} amount={recipe.bookmarkAmount || 0} />
+        </div> 
+      </Card.Footer>
+    </Card.Root>
   </div>
+{/snippet}
+
+{#snippet RecipeCardWithContext(recipe: Recipe)}
+  <ContextMenu.Root>
+    <ContextMenu.Trigger>
+      {@render RecipeCard(recipe)}
+    </ContextMenu.Trigger>
+    <ContextMenu.Content>
+      <ContextMenu.Item class="flex justify-between">Delete <Trash size=15 /></ContextMenu.Item>
+    </ContextMenu.Content>
+  </ContextMenu.Root>
 {/snippet}
 
 {#snippet RecipeDetails(recipe: Recipe)}
@@ -71,7 +95,11 @@
   {#each columns() as column, i (i)}
     <div class="grid gap-2 h-fit">
       {#each column as recipe (recipe.id)}
-        {@render RecipeCard(recipe)}
+        {#if recipe.authorId === user?.id}
+          {@render RecipeCardWithContext(recipe)}
+        {:else}
+          {@render RecipeCard(recipe)}
+        {/if}
       {/each}
     </div>
   {/each}

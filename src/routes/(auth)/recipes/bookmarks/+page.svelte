@@ -14,7 +14,7 @@
   
 </script>
 
-<div class="p-2 max-w-[40rem] space-y-2">
+<div class="p-2 w-full md:max-w-[40rem] space-y-2">
   {#if recipes.length}
     <RecipeGrid {recipes} />
   {:else}

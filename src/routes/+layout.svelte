@@ -10,6 +10,6 @@
 </script>
 
 <ModeWatcher />
-<Toaster richColors closeButton />
+<Toaster richColors closeButton position="top-right" />
 
 {@render children()}

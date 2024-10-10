@@ -10,7 +10,7 @@
     data
   } = $props();
 
-  let canEdit = $derived(data.ownerId === data.user?.id);
+  let canEdit = $derived(data.authorId === data.user?.id);
 
 </script>
 

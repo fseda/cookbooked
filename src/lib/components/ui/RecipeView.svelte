@@ -11,6 +11,7 @@
 	import Rating from './Rating.svelte';
 	import { toast } from 'svelte-sonner';
   import { Button } from '$lib/components/ui/button';
+	import RecipeBookmark from './RecipeBookmark.svelte';
 
   let {
     data
@@ -45,7 +46,7 @@
       setTimeout(() => {
         copied = false;
       }, 5000);
-      toast.info('Link copied to clipboard!', { position: 'top-right', duration: 5000 });
+      toast.info('Link copied to clipboard!', { duration: 5000 });
     }
   }
 
@@ -66,8 +67,8 @@
             <span class="text-md text-gray-600 dark:text-gray-400">Author: 
               {#if recipe.user}
                 <a class="font-semibold hover:underline" href="/{recipe.user.username}/recipes">{authorUsername}</a>
-              {:else if recipe.userId}
-                <a class="font-semibold hover:underline" href="/{recipe.userId}/recipes">{authorUsername}</a>
+              {:else if recipe.authorId}
+                <a class="font-semibold hover:underline" href="/{recipe.authorId}/recipes">{authorUsername}</a>
               {:else}
                 <span class="font-semibold">NO USER</span>
               {/if}
@@ -106,14 +107,7 @@
     {/snippet}
 
     {#snippet bookmark()}
-      <button class="flex flex-row p-2" onclick={() => toggleBookmark()}>
-        {#if data.bookmarked}
-          <BookmarkCheck />
-        {:else}
-          <Bookmark />
-        {/if}
-        {recipe.bookmarks.length}
-      </button>
+      <RecipeBookmark bookmarked={data.bookmarked} recipeTitle={recipe.title} amount={recipe.bookmarks.length} />
     {/snippet}
   </RecipeHeader>
 
@@ -125,27 +119,3 @@
     {@html body}
   </div>
 </article>
-
-
-<div hidden>
-  <form action="?/bookmark" method=post use:enhance={() => {
-    return async ({ update, result }) => {
-      await update({ invalidateAll: true }).finally(async () => {
-        switch (result.type) {
-          case 'success':
-            toast.info(result.data.bookmarked ? 'Bookmarked!' : 'Bookmark removed!', { position: 'top-right' }); 
-            break;
-          case 'failure':
-            toast.error('An unexpected error ocurred!', { position: 'top-right' });
-          default:
-            break;
-        }
-      })
-    }
-  }}>
-    <button type=submit bind:this={bookmarkBtn}></button>
-  </form>
-</div>
-
-
-

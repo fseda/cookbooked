@@ -15,7 +15,7 @@
 <div class="flex flex-row justify-between border-b">
   {@render title()}
   
-  <div class="flex flex-row gap-1 items-center">
+  <div class="flex flex-row gap-3 items-center">
     {@render rating()}
     {@render bookmark()}
   </div>

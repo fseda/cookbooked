@@ -1,5 +1,5 @@
 import { isSignedIn } from '$lib/server/auth/index.js';
-import { getPublicRecipesByUserId, getRecipesByUserId } from '$lib/server/data/recipes.js';
+import { getRecipesByAuthor } from '$lib/server/data/recipes.js';
 import { getPublicUser, getUserById, getUserByIdOrUsername } from '$lib/server/data/users.js';
 import { error } from '@sveltejs/kit';
 
@@ -14,16 +14,19 @@ export const load = async ({ locals, params }) => {
   if (!referencedUser) {
     return error(404, 'User not found');
   }
-  const isOwner = referencedUser.id === locals.user?.id;
+  const isAuthor = referencedUser.id === locals.user?.id;
 
-  const recipes = isOwner 
-    ? await getRecipesByUserId(referencedUser.id) 
-    : await getPublicRecipesByUserId(referencedUser.id);
-  
+  const recipes = await getRecipesByAuthor(referencedUser.id, isAuthor);
+
+  recipes.forEach(r => {
+    r.bookmarked = r.bookmarks.some(b => b.userId === locals.user?.id);
+    r.bookmarkAmount = r.bookmarks.length;
+  });
+
   return {
-    recipesOwner: getPublicUser(referencedUser),
+    recipesAuthor: getPublicUser(referencedUser),
     recipes,
-    isOwner,
+    isAuthor,
   };
 }
 

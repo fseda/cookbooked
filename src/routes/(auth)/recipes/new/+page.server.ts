@@ -3,7 +3,7 @@ import { createRecipe, hasDuplicateTitle, type NewRecipe } from "$lib/server/dat
 import { error, redirect } from "@sveltejs/kit";
 import { fail, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { createSchema } from "../schema";
+import { createRecipeSchema } from "../schema";
 
 export async function load({ locals }) {
   if (!isSignedIn(locals)) {
@@ -11,7 +11,7 @@ export async function load({ locals }) {
   }
 
   return {
-    form: await superValidate(zod(createSchema)),
+    form: await superValidate(zod(createRecipeSchema)),
   };
 }
 
@@ -21,7 +21,7 @@ export const actions = {
       return error(401);
     }
 
-    const form = await superValidate(request, zod(createSchema));
+    const form = await superValidate(request, zod(createRecipeSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -34,8 +34,8 @@ export const actions = {
     }
 
     const nRecipe: NewRecipe = {
-      userId: locals.user!.id,
       ...form.data,
+      authorId: locals.user!.id,
     };
 
     const recipe = await createRecipe(nRecipe);
