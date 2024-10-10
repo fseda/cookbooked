@@ -8,6 +8,8 @@
 	import { Trash } from 'lucide-svelte';
 	import { getContext } from 'svelte';
 	import RecipeBookmark from './RecipeBookmark.svelte';
+	import Rating from './Rating.svelte';
+	import RatingStars from './RatingStars.svelte';
 
   let {
     recipes
@@ -49,9 +51,14 @@
     <Card.Root class="w-full">
       <a href="/recipes/{recipe.id}" class="h-fit">
         <Card.Header class="p-4">
-          <Card.Title>
-            {recipe.title}
-          </Card.Title>
+          <div class='flex flex-row justify-between'>
+            <Card.Title>
+              {recipe.title}
+            </Card.Title>
+            <div>
+              <RatingStars size={15} rating={recipe.rating || 0} maxRating={5} />
+            </div>
+          </div>
           <Card.Description>{recipe.description ?? recipe.title}</Card.Description>
         </Card.Header>
         <!-- <Card.Content>

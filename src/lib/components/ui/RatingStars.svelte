@@ -4,9 +4,11 @@
   let {
     rating,
     maxRating,
+    size = 20,
   }: {
     rating: number,
     maxRating: number,
+    size?: number,
   } = $props();
 
   let fulls: number = $state(0);
@@ -24,15 +26,15 @@
 <div class="relative">
   <div class="flex gap-0">
     {#each { length: maxRating } as _, s}
-      <Star size=20 strokeWidth=1.5 />
+      <Star {size} strokeWidth=1.5 />
     {/each}
   </div>
   <div class="absolute flex gap-0 top-0">
     {#each { length: fulls } as _, f}
-      <Star size=20 strokeWidth=1.5 fill=gold />
+      <Star {size} strokeWidth=1.5 fill=gold />
     {/each}
     {#if half && half > 0}
-      <StarHalf size=20 strokeWidth=1.5 fill=gold />
+      <StarHalf {size} strokeWidth=1.5 fill=gold />
     {/if}
   </div>
 </div>
