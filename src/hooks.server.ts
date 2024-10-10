@@ -4,10 +4,10 @@ import * as Sentry from "@sentry/sveltekit";
 import { type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
-Sentry.init({
-	dsn: env.SENTRY_DNS,
-	tracesSampleRate: 1,
-})
+// Sentry.init({
+// 	dsn: env.SENTRY_DNS,
+// 	tracesSampleRate: 1,
+// })
 
 const handleCookies: Handle = async function({ event, resolve }) {
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
