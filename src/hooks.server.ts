@@ -6,7 +6,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 Sentry.init({
 	dsn: env.SENTRY_DNS,
-	tracesSampleRate: 1
+	tracesSampleRate: 1,
 })
 
 const handleCookies: Handle = async function({ event, resolve }) {
