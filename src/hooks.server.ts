@@ -1,6 +1,4 @@
-import { env } from "$env/dynamic/private";
 import { lucia } from "$lib/server/auth/lucia";
-import * as Sentry from "@sentry/sveltekit";
 import { type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -38,6 +36,9 @@ const handleCookies: Handle = async function({ event, resolve }) {
 	return resolve(event);
 }
 
-export const handle: Handle = sequence(Sentry.sentryHandle(), handleCookies);
+export const handle: Handle = sequence(
+	// Sentry.sentryHandle(),
+	handleCookies
+);
 
-export const handleError = Sentry.handleErrorWithSentry();
+// export const handleError = Sentry.handleErrorWithSentry();

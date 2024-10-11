@@ -1,7 +1,4 @@
-import { dev } from "$app/environment";
-import { env } from "$env/dynamic/public";
-import * as Sentry from '@sentry/sveltekit';
-import { handleErrorWithSentry } from "@sentry/sveltekit";
+// import { handleErrorWithSentry } from "@sentry/sveltekit";
 
 // Sentry.init({
 //   dsn: env.PUBLIC_SENTRY_DNS,
@@ -20,4 +17,4 @@ import { handleErrorWithSentry } from "@sentry/sveltekit";
 // });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
-export const handleError = handleErrorWithSentry();
+// export const handleError = handleErrorWithSentry();
